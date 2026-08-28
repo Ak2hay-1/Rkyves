@@ -1,39 +1,31 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import { contactFormSchema, type ContactFormData } from "@/lib/validations";
-import { serviceInterestOptions } from "@/lib/content/site";
-import { trackEvent } from "@/lib/analytics";
+import { serviceInterestOptions } from "@/lib/constants";
 
-type FormErrors = Partial<Record<keyof ContactFormData | "website", string>>;
+type FormErrors = Partial<Record<keyof ContactFormData, string>>;
 
-type FormState = ContactFormData & { website: string };
-
-const initialForm: FormState = {
+const initialForm: ContactFormData = {
   name: "",
   email: "",
   phone: "",
   serviceInterest: "",
   message: "",
-  website: "",
 };
 
 export default function ContactForm() {
-  const router = useRouter();
-  const [form, setForm] = useState<FormState>(initialForm);
+  const [form, setForm] = useState<ContactFormData>(initialForm);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [statusMessage, setStatusMessage] = useState("");
 
   function handleChange(
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof FormErrors]) {
+    if (errors[name as keyof ContactFormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   }
@@ -47,7 +39,7 @@ export default function ContactForm() {
     if (!result.success) {
       const fieldErrors: FormErrors = {};
       for (const issue of result.error.issues) {
-        const field = issue.path[0] as keyof FormErrors;
+        const field = issue.path[0] as keyof ContactFormData;
         if (!fieldErrors[field]) {
           fieldErrors[field] = issue.message;
         }
@@ -66,52 +58,32 @@ export default function ContactForm() {
         body: JSON.stringify(result.data),
       });
 
-      const data = (await response.json()) as {
-        message?: string;
-        error?: string;
-        fieldErrors?: Record<string, string>;
-      };
+      const data = (await response.json()) as { message?: string; error?: string };
 
       if (!response.ok) {
-        if (data.fieldErrors) {
-          setErrors(data.fieldErrors);
-        }
         throw new Error(data.error ?? "Something went wrong. Please try again.");
       }
 
-      trackEvent("contact_submit");
+      setStatus("success");
+      setStatusMessage(data.message ?? "Thank you! We will get back to you soon.");
       setForm(initialForm);
-      router.push("/contact?sent=1");
     } catch (error) {
       setStatus("error");
       setStatusMessage(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again."
+        error instanceof Error ? error.message : "Something went wrong. Please try again."
       );
     }
   }
 
-  return (
-    <form onSubmit={handleSubmit} className="relative space-y-5" noValidate>
-      {/* Honeypot — leave empty */}
-      <div className="absolute -left-[9999px] top-auto h-0 w-0 overflow-hidden" aria-hidden>
-        <label htmlFor="website">Website</label>
-        <input
-          id="website"
-          name="website"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          value={form.website}
-          onChange={handleChange}
-        />
-      </div>
+  const inputClass =
+    "w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20";
 
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="name" className="mb-2 block text-sm font-medium text-ink">
-            Name <span className="text-accent">*</span>
+          <label htmlFor="name" className="mb-2 block text-sm font-medium text-foreground">
+            Name <span className="text-primary">*</span>
           </label>
           <input
             id="name"
@@ -119,21 +91,21 @@ export default function ContactForm() {
             type="text"
             value={form.name}
             onChange={handleChange}
-            className="input-field"
+            className={inputClass}
             placeholder="Your name"
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? "name-error" : undefined}
           />
           {errors.name && (
-            <p id="name-error" className="mt-1 text-sm text-danger">
+            <p id="name-error" className="mt-1 text-sm text-red-600">
               {errors.name}
             </p>
           )}
         </div>
 
         <div>
-          <label htmlFor="email" className="mb-2 block text-sm font-medium text-ink">
-            Email <span className="text-accent">*</span>
+          <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground">
+            Email <span className="text-primary">*</span>
           </label>
           <input
             id="email"
@@ -141,13 +113,13 @@ export default function ContactForm() {
             type="email"
             value={form.email}
             onChange={handleChange}
-            className="input-field"
+            className={inputClass}
             placeholder="you@company.com"
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? "email-error" : undefined}
           />
           {errors.email && (
-            <p id="email-error" className="mt-1 text-sm text-danger">
+            <p id="email-error" className="mt-1 text-sm text-red-600">
               {errors.email}
             </p>
           )}
@@ -156,8 +128,8 @@ export default function ContactForm() {
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="phone" className="mb-2 block text-sm font-medium text-ink">
-            Phone <span className="text-xs text-muted">(optional)</span>
+          <label htmlFor="phone" className="mb-2 block text-sm font-medium text-foreground">
+            Phone <span className="text-muted text-xs">(optional)</span>
           </label>
           <input
             id="phone"
@@ -165,15 +137,15 @@ export default function ContactForm() {
             type="tel"
             value={form.phone}
             onChange={handleChange}
-            className="input-field"
-            placeholder="+91 74992 49403"
+            className={inputClass}
+            placeholder="+91 XXXXX XXXXX"
           />
         </div>
 
         <div>
           <label
             htmlFor="serviceInterest"
-            className="mb-2 block text-sm font-medium text-ink"
+            className="mb-2 block text-sm font-medium text-foreground"
           >
             Service interest
           </label>
@@ -182,7 +154,7 @@ export default function ContactForm() {
             name="serviceInterest"
             value={form.serviceInterest}
             onChange={handleChange}
-            className="input-field"
+            className={inputClass}
           >
             {serviceInterestOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -194,8 +166,8 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="message" className="mb-2 block text-sm font-medium text-ink">
-          Message <span className="text-accent">*</span>
+        <label htmlFor="message" className="mb-2 block text-sm font-medium text-foreground">
+          Message <span className="text-primary">*</span>
         </label>
         <textarea
           id="message"
@@ -203,13 +175,13 @@ export default function ContactForm() {
           rows={5}
           value={form.message}
           onChange={handleChange}
-          className="input-field"
+          className={inputClass}
           placeholder="Tell us about your business and what you need..."
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "message-error" : undefined}
         />
         {errors.message && (
-          <p id="message-error" className="mt-1 text-sm text-danger">
+          <p id="message-error" className="mt-1 text-sm text-red-600">
             {errors.message}
           </p>
         )}
@@ -218,7 +190,11 @@ export default function ContactForm() {
       {statusMessage && (
         <div
           role="status"
-          className="rounded border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger"
+          className={`rounded-lg px-4 py-3 text-sm ${
+            status === "success"
+              ? "bg-green-50 text-green-800 border border-green-200"
+              : "bg-red-50 text-red-800 border border-red-200"
+          }`}
         >
           {statusMessage}
         </div>
@@ -227,9 +203,9 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        {status === "loading" ? "Sending..." : "Send message"}
+        {status === "loading" ? "Sending..." : "Send Message"}
       </button>
     </form>
   );

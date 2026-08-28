@@ -4,23 +4,18 @@ Professional multi-page marketing website for **Rkyves** — a technology and di
 
 ## Pages
 
-- **Home** — Brand hero, surface→depth story, work preview, services, process, CTA
-- **Services** — Full catalog with deep anchors
-- **Work** — Client index and case studies (`/work/[slug]`)
-- **Process** — Discovery → build → launch → care
-- **Pricing** — Starter / Growth / Operations packages
-- **About** — Company story, vision, ecosystem
-- **Contact** — Inquiry form, booking embed, WhatsApp, email
-- **Privacy / Terms** — Legal pages
+- **Home** — Hero, services overview, why Rkyves, approach, CTA
+- **Services** — Detailed breakdown of all offerings
+- **About** — Company story, vision, and ecosystem
+- **Contact** — Contact form, WhatsApp, and email links
 
 ## Tech Stack
 
-- [Next.js](https://nextjs.org/) 16 (App Router)
+- [Next.js](https://nextjs.org/) (App Router)
 - [Tailwind CSS](https://tailwindcss.com/) v4
 - [TypeScript](https://www.typescriptlang.org/)
 - [Resend](https://resend.com/) — contact form emails
 - [Lucide React](https://lucide.dev/) — icons
-- [@vercel/analytics](https://vercel.com/analytics) — web analytics
 
 ## Getting Started
 
@@ -43,23 +38,15 @@ cp .env.example .env.local
 | `RESEND_API_KEY` | API key from [resend.com](https://resend.com) |
 | `CONTACT_EMAIL` | Where form submissions are delivered |
 | `RESEND_FROM_EMAIL` | (Optional) Verified sender in Resend |
-| `NEXT_PUBLIC_SITE_URL` | Production URL (sitemap, metadata) |
-| `NEXT_PUBLIC_CAL_URL` | (Optional) Cal.com / Calendly embed URL |
-| `LEAD_WEBHOOK_URL` | (Optional) CRM / Make / Zapier webhook |
-| `NEXT_PUBLIC_GA_ID` | (Optional) Google Analytics 4 measurement ID |
-| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | (Optional) Plausible domain |
 
-### 3. Edit content
+### 3. Update contact details
 
-Site copy lives in typed modules under [`lib/content/`](lib/content/):
+Edit [`lib/constants.ts`](lib/constants.ts) to set your real:
 
-- `site.ts` — name, contact, nav
-- `services.ts` — service catalog
-- `cases.ts` — case studies
-- `pricing.ts` — packages
-- `process.ts` — engagement steps
-- `home.ts` — home / about copy
-- `testimonials.ts` — real quotes only (empty until you have them)
+- Email address
+- Phone number
+- WhatsApp number
+- Business address
 
 ### 4. Run the development server
 
@@ -75,7 +62,6 @@ Open [http://localhost:3000](http://localhost:3000).
 2. Generate an API key and add it to `.env.local`
 3. For production, verify your domain and set `RESEND_FROM_EMAIL`
 4. Without an API key, the form still renders but returns a setup message
-5. Optional: set `LEAD_WEBHOOK_URL` to forward leads to a CRM or spreadsheet
 
 ## Deploy on Vercel
 
@@ -84,13 +70,31 @@ Open [http://localhost:3000](http://localhost:3000).
 3. Add environment variables in the Vercel dashboard
 4. Deploy
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
 ## Project Structure
 
 ```
-app/                 # App Router pages + API
-components/          # UI components
-lib/content/         # Typed marketing content
-lib/validations.ts   # Contact form schema
-lib/analytics.ts     # Client event helpers
-public/              # Logos and static assets
+app/
+  page.tsx              # Home
+  services/page.tsx     # Services
+  about/page.tsx        # About
+  contact/page.tsx      # Contact
+  api/contact/route.ts  # Contact form API
+components/             # Shared UI components
+lib/
+  constants.ts          # Site content and config
+  validations.ts        # Form validation (Zod)
+public/
+  logo-light.png        # Header logo
+  logo-dark.png         # Footer logo
+```
+
+## Scripts
+
+```bash
+npm run dev      # Start development server
+npm run build    # Production build
+npm run start    # Start production server
+npm run lint     # Run ESLint
 ```

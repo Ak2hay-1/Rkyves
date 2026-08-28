@@ -1,72 +1,70 @@
 import type { Metadata } from "next";
-import { Check } from "lucide-react";
-import HomeCta from "@/components/HomeCta";
-import { services } from "@/lib/content/services";
+import Hero from "@/components/Hero";
+import { services } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Websites, online stores, admin panels, integrations, ERP/POS, and hosting & infrastructure — technology built around your business.",
+    "Professional websites, e-commerce, admin panels, business integrations, ERP/POS software, and hosting — all from Rkyves.",
 };
 
 export default function ServicesPage() {
   return (
     <>
-      <section className="border-b border-border bg-surface-muted/40 py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-            Services
-          </p>
-          <h1 className="mt-3 max-w-3xl font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">
-            Everything under the surface — and the surface itself
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-            From your first professional website to ERP, POS, and ongoing
-            infrastructure care. We design around how your business operates.
-          </p>
+      <Hero
+        compact
+        title="Our Services"
+        subtitle="From your first website to full business management — Rkyves provides the digital solutions your business needs to grow."
+      />
+
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="space-y-16">
+            {services.map((service, index) => {
+              const Icon = service.icon;
+              const isEven = index % 2 === 0;
+
+              return (
+                <article
+                  key={service.id}
+                  id={service.id}
+                  className={`grid gap-8 lg:grid-cols-2 lg:items-center ${
+                    !isEven ? "lg:[&>div:first-child]:order-2" : ""
+                  }`}
+                >
+                  <div>
+                    <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                      <Icon className="h-7 w-7" aria-hidden="true" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-foreground md:text-3xl">
+                      {service.title}
+                    </h2>
+                    <p className="mt-4 text-muted leading-relaxed">
+                      {service.description}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+                    <h3 className="text-sm font-semibold uppercase tracking-wider text-primary">
+                      Capabilities
+                    </h3>
+                    <ul className="mt-4 space-y-3">
+                      {service.features.map((feature) => (
+                        <li
+                          key={feature}
+                          className="flex items-start gap-3 text-foreground/80"
+                        >
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </section>
-
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
-        <div className="space-y-20">
-          {services.map((service) => {
-            const Icon = service.icon;
-            return (
-              <section
-                key={service.id}
-                id={service.id}
-                className="scroll-mt-28 grid gap-8 border-b border-border pb-20 last:border-0 last:pb-0 lg:grid-cols-[1fr_1.2fr]"
-              >
-                <div>
-                  <Icon className="h-8 w-8 text-accent" aria-hidden />
-                  <h2 className="mt-4 font-display text-3xl font-semibold text-ink">
-                    {service.title}
-                  </h2>
-                  <p className="mt-4 leading-relaxed text-muted">
-                    {service.description}
-                  </p>
-                </div>
-                <ul className="grid gap-3 sm:grid-cols-2">
-                  {service.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="flex items-start gap-3 border border-border bg-surface p-4 text-sm text-ink"
-                    >
-                      <Check
-                        className="mt-0.5 h-4 w-4 shrink-0 text-accent"
-                        aria-hidden
-                      />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            );
-          })}
-        </div>
-      </div>
-
-      <HomeCta />
     </>
   );
 }

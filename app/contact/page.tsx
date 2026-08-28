@@ -1,122 +1,102 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Mail, MessageCircle, Phone } from "lucide-react";
+import Hero from "@/components/Hero";
 import ContactForm from "@/components/ContactForm";
-import BookingEmbed from "@/components/BookingEmbed";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import {
   contactInfo,
   getMailtoUrl,
   getWhatsAppUrl,
-} from "@/lib/content/site";
+} from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Book a call, message us on WhatsApp, or send an inquiry. We help growing businesses with websites, software, and infrastructure.",
+    "Get in touch with Rkyves. Send us a message, email us, or chat on WhatsApp to discuss your project.",
 };
 
-type ContactPageProps = {
-  searchParams: Promise<{ sent?: string }>;
-};
-
-export default async function ContactPage({ searchParams }: ContactPageProps) {
-  const params = await searchParams;
-  const sent = params.sent === "1";
-
+export default function ContactPage() {
   return (
     <>
-      <section className="border-b border-border bg-surface-muted/40 py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-            Contact
-          </p>
-          <h1 className="mt-3 max-w-3xl font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">
-            Let&apos;s talk about your business
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-            Tell us what you need — a website, store, admin tools, ERP/POS, or
-            ongoing care. We&apos;ll respond with a practical next step.
-          </p>
-          {sent && (
-            <p
-              role="status"
-              className="mt-6 max-w-xl border border-success/30 bg-success/10 px-4 py-3 text-sm text-success"
-            >
-              Thank you — your message was sent. We&apos;ll get back to you soon.
-            </p>
-          )}
-        </div>
-      </section>
+      <Hero
+        compact
+        title="Contact Us"
+        subtitle="Tell us about your business and what you need. We'll get back to you as soon as possible."
+      />
 
       <section className="py-16 md:py-24">
-        <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <h2 className="font-display text-2xl font-semibold text-ink">
-              Send an inquiry
-            </h2>
-            <p className="mt-2 text-sm text-muted">
-              Prefer email?{" "}
-              <a href={getMailtoUrl()} className="font-medium text-accent hover:underline">
-                {contactInfo.email}
-              </a>
-            </p>
-            <div className="mt-8">
-              <ContactForm />
-            </div>
-          </div>
-
-          <aside className="space-y-8">
-            <div id="book" className="scroll-mt-28 border border-border bg-surface p-6 md:p-8">
-              <h2 className="font-display text-2xl font-semibold text-ink">
-                Book a call
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-5">
+            <div className="lg:col-span-2">
+              <h2 className="text-2xl font-bold text-foreground">
+                Get in touch directly
               </h2>
-              <p className="mt-2 text-sm text-muted">
-                Pick a time that works for you. We&apos;ll discuss goals, scope,
-                and whether we&apos;re a fit.
+              <p className="mt-4 text-muted leading-relaxed">
+                Prefer a quick conversation? Reach us on WhatsApp or email.
+                We&apos;re happy to discuss websites, e-commerce, integrations,
+                ERP/POS, or hosting.
               </p>
-              <div className="mt-6">
-                <BookingEmbed />
+
+              <div className="mt-8 space-y-4">
+                <a
+                  href={getWhatsAppUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-[#25D366]/40 hover:bg-[#25D366]/5"
+                >
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#25D366]/10 text-[#25D366]">
+                    <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <p className="font-medium text-foreground">WhatsApp</p>
+                    <p className="text-sm text-muted">{contactInfo.whatsapp}</p>
+                  </div>
+                </a>
+
+                <a
+                  href={getMailtoUrl()}
+                  className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-primary/40 hover:bg-primary/5"
+                >
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Mail className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <p className="font-medium text-foreground">Email</p>
+                    <p className="text-sm text-muted">{contactInfo.email}</p>
+                  </div>
+                </a>
+
+                <div className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Phone className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <p className="font-medium text-foreground">Phone</p>
+                    <p className="text-sm text-muted">{contactInfo.phone}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 hidden sm:block">
+                <WhatsAppButton floating={false} label="Open WhatsApp Chat" />
               </div>
             </div>
 
-            <div className="border border-border bg-surface p-6 md:p-8">
-              <h2 className="font-display text-xl font-semibold text-ink">
-                Direct channels
-              </h2>
-              <ul className="mt-5 space-y-4 text-sm">
-                <li>
-                  <Link
-                    href={getWhatsAppUrl()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-3 text-ink hover:text-accent"
-                  >
-                    <MessageCircle className="h-5 w-5 text-accent" aria-hidden />
-                    WhatsApp {contactInfo.phone}
-                  </Link>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${contactInfo.email}`}
-                    className="inline-flex items-center gap-3 text-ink hover:text-accent"
-                  >
-                    <Mail className="h-5 w-5 text-accent" aria-hidden />
-                    {contactInfo.email}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`tel:${contactInfo.phone.replace(/\s/g, "")}`}
-                    className="inline-flex items-center gap-3 text-ink hover:text-accent"
-                  >
-                    <Phone className="h-5 w-5 text-accent" aria-hidden />
-                    {contactInfo.phone}
-                  </a>
-                </li>
-              </ul>
-              <p className="mt-6 text-sm text-muted">{contactInfo.address}</p>
+            <div className="lg:col-span-3">
+              <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm md:p-8">
+                <h2 className="text-2xl font-bold text-foreground">
+                  Send us a message
+                </h2>
+                <p className="mt-2 text-muted">
+                  Fill out the form below and we&apos;ll respond within 1–2
+                  business days.
+                </p>
+                <div className="mt-8">
+                  <ContactForm />
+                </div>
+              </div>
             </div>
-          </aside>
+          </div>
         </div>
       </section>
     </>

@@ -1,22 +1,32 @@
-"use client";
-
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
-import { getWhatsAppUrl } from "@/lib/content/site";
-import { trackEvent } from "@/lib/analytics";
+import { getWhatsAppUrl } from "@/lib/constants";
 
-export default function WhatsAppButton() {
+type WhatsAppButtonProps = {
+  floating?: boolean;
+  className?: string;
+  label?: string;
+};
+
+export default function WhatsAppButton({
+  floating = true,
+  className = "",
+  label = "Chat on WhatsApp",
+}: WhatsAppButtonProps) {
+  const baseClasses = floating
+    ? "fixed bottom-6 right-6 z-40 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl"
+    : "inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#25D366] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1fb855]";
+
   return (
     <Link
       href={getWhatsAppUrl()}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={() => trackEvent("whatsapp_click")}
-      className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded bg-accent px-4 py-3 text-sm font-semibold text-on-accent shadow-lg transition-transform hover:scale-[1.02] hover:bg-accent-hover md:bottom-8 md:right-8"
-      aria-label="Chat on WhatsApp"
+      className={`${baseClasses} ${className}`}
+      aria-label={label}
     >
-      <MessageCircle className="h-5 w-5" aria-hidden />
-      <span className="hidden sm:inline">WhatsApp</span>
+      <MessageCircle className="h-5 w-5" aria-hidden="true" />
+      <span className={floating ? "hidden sm:inline" : ""}>{label}</span>
     </Link>
   );
 }

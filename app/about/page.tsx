@@ -1,97 +1,117 @@
 import type { Metadata } from "next";
-import { aboutContent, whyRkyves, approachItems } from "@/lib/content/home";
-import HomeCta from "@/components/HomeCta";
+import Hero from "@/components/Hero";
+import SectionHeading from "@/components/SectionHeading";
+import {
+  aboutContent,
+  approachItems,
+  siteConfig,
+  whyRkyves,
+} from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Rkyves helps growing businesses build, manage, and grow their digital presence — websites, e-commerce, admin tools, ERP, POS, and infrastructure care.",
+    "Learn about Rkyves — a technology company building accessible digital solutions for growing businesses.",
 };
 
 export default function AboutPage() {
   return (
     <>
-      <section className="border-b border-border bg-surface-muted/40 py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-            About
-          </p>
-          <h1 className="mt-3 max-w-3xl font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">
-            {aboutContent.whatIs.title}
-          </h1>
-          <div className="mt-6 max-w-2xl space-y-4 text-lg leading-relaxed text-muted">
-            {aboutContent.whatIs.paragraphs.map((p) => (
-              <p key={p.slice(0, 32)}>{p}</p>
+      <Hero
+        compact
+        title="About Rkyves"
+        subtitle="We build technology that understands how your business actually operates — and grows with you."
+      />
+
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-3xl font-bold text-foreground">
+              {aboutContent.whatIs.title}
+            </h2>
+            <div className="mt-6 space-y-4 text-muted leading-relaxed text-lg">
+              {aboutContent.whatIs.paragraphs.map((paragraph) => (
+                <p key={paragraph.slice(0, 40)}>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-surface py-16 md:py-24 border-y border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-3xl font-bold text-foreground">
+              {whyRkyves.title}
+            </h2>
+            <div className="mt-6 space-y-4 text-muted leading-relaxed">
+              {whyRkyves.paragraphs.map((paragraph) => (
+                <p key={paragraph.slice(0, 40)}>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            title="Our Approach"
+            subtitle="Your Business → Our Technology → Your Growth"
+          />
+          <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
+            {approachItems.map((item) => (
+              <div
+                key={item}
+                className="rounded-xl border border-border bg-surface p-5 shadow-sm"
+              >
+                <span className="mr-2 inline-block h-2 w-2 rounded-full bg-primary" />
+                <span className="text-foreground">{item}</span>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section-rule py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid gap-12 lg:grid-cols-2">
-            <div>
-              <h2 className="font-display text-3xl font-semibold text-ink">
-                {whyRkyves.title}
-              </h2>
-              <div className="mt-6 space-y-4 leading-relaxed text-muted">
-                {whyRkyves.paragraphs.map((p) => (
-                  <p key={p.slice(0, 32)}>{p}</p>
-                ))}
-              </div>
-            </div>
-            <div className="border border-border bg-surface p-8">
-              <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-                Our approach
-              </p>
-              <ul className="mt-6 space-y-3">
-                {approachItems.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-3 text-sm text-muted"
-                  >
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-rule py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <h2 className="font-display text-3xl font-semibold text-ink">
+      <section className="bg-navy py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-white md:text-4xl">
             {aboutContent.vision.title}
           </h2>
-          <blockquote className="mt-6 max-w-3xl border-l-2 border-accent pl-6 font-display text-2xl font-medium leading-snug text-ink md:text-3xl">
-            {aboutContent.vision.quote}
+          <blockquote className="mx-auto mt-6 max-w-2xl text-xl font-medium text-white/90 md:text-2xl">
+            &ldquo;{aboutContent.vision.quote}&rdquo;
           </blockquote>
-          <p className="mt-6 max-w-2xl leading-relaxed text-muted">
+          <p className="mx-auto mt-6 max-w-2xl text-white/70 leading-relaxed">
             {aboutContent.vision.description}
           </p>
-
-          <ol className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {aboutContent.ecosystem.map((item, index) => (
-              <li
-                key={item.step}
-                className="border border-border bg-surface p-6"
-              >
-                <p className="font-display text-3xl font-semibold text-accent/35">
-                  {String(index + 1).padStart(2, "0")}
-                </p>
-                <h3 className="mt-3 font-display text-xl font-semibold text-ink">
-                  {item.step}
-                </h3>
-                <p className="mt-2 text-sm text-muted">{item.description}</p>
-              </li>
-            ))}
-          </ol>
         </div>
       </section>
 
-      <HomeCta />
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            title="Growing With Your Business"
+            subtitle="Start simple. Scale when you're ready."
+          />
+          <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {aboutContent.ecosystem.map((item, index) => (
+              <div
+                key={item.step}
+                className="relative rounded-2xl border border-border bg-surface p-6 text-center shadow-sm"
+              >
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+                  {index + 1}
+                </span>
+                <h3 className="mt-4 font-semibold text-foreground">{item.step}</h3>
+                <p className="mt-2 text-sm text-muted">{item.description}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mx-auto mt-10 max-w-2xl text-center text-lg font-medium text-foreground">
+            {siteConfig.tagline}
+          </p>
+        </div>
+      </section>
     </>
   );
 }

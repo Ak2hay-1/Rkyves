@@ -1,42 +1,60 @@
-import Image from "next/image";
 import Link from "next/link";
-import { siteConfig } from "@/lib/content/site";
 
 type RkyvesLogoProps = {
   size?: "sm" | "md" | "lg";
-  variant?: "dark" | "light";
+  href?: string;
 };
 
-const sizes = {
-  sm: { height: 28, width: 120, text: "text-lg" },
-  md: { height: 36, width: 150, text: "text-xl" },
-  lg: { height: 44, width: 180, text: "text-2xl" },
-};
+function LogoIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"
+        fill="url(#logo-gradient)"
+      />
+      <defs>
+        <linearGradient id="logo-gradient" x1="2" y1="2" x2="22" y2="22">
+          <stop stopColor="#6366f1" />
+          <stop offset="1" stopColor="#a855f7" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
 
 export default function RkyvesLogo({
   size = "md",
-  variant = "dark",
+  href = "/",
 }: RkyvesLogoProps) {
-  const s = sizes[size];
-  const src = variant === "light" ? "/logo-light.png" : "/logo-dark.png";
+  const sizes = {
+    sm: { icon: "h-5 w-5", text: "text-sm" },
+    md: { icon: "h-6 w-6", text: "text-base" },
+    lg: { icon: "h-8 w-8", text: "text-2xl" },
+  };
 
-  return (
-    <Link
-      href="/"
-      className="inline-flex items-center gap-2 text-ink transition-opacity hover:opacity-80"
-      aria-label={`${siteConfig.name} home`}
-    >
-      <Image
-        src={src}
-        alt=""
-        width={s.height}
-        height={s.height}
-        className="h-[1.1em] w-auto"
-        priority
-      />
-      <span className={`font-display font-semibold tracking-tight ${s.text}`}>
-        {siteConfig.name}
+  const s = sizes[size];
+
+  const content = (
+    <span className="inline-flex items-center gap-2">
+      <LogoIcon className={s.icon} />
+      <span className={`font-semibold tracking-tight text-foreground ${s.text}`}>
+        Rkyves
       </span>
-    </Link>
+    </span>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="shrink-0">
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 }

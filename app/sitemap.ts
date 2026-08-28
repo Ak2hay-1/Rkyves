@@ -1,33 +1,45 @@
 import type { MetadataRoute } from "next";
-import { caseStudies } from "@/lib/content/cases";
-import { siteConfig } from "@/lib/content/site";
+import { siteConfig } from "@/lib/constants";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = siteConfig.url;
-  const staticRoutes = [
-    "",
-    "/services",
-    "/work",
-    "/process",
-    "/pricing",
-    "/about",
-    "/contact",
-    "/privacy",
-    "/terms",
-  ];
+  const baseUrl = siteConfig.url;
 
   return [
-    ...staticRoutes.map((path) => ({
-      url: `${base}${path}`,
+    {
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: path === "" ? 1 : 0.7,
-    })),
-    ...caseStudies.map((study) => ({
-      url: `${base}/work/${study.id}`,
+      changeFrequency: "monthly",
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/services`,
       lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
   ];
 }
