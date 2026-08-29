@@ -1,3 +1,6 @@
+import Reveal from "@/components/motion/Reveal";
+import { Stagger, StaggerItem } from "@/components/motion/Stagger";
+
 const featured = {
   quote:
     "Rkyves transformed our entire digital operation. From website to ERP, everything just works — and we finally stopped worrying about downtime.",
@@ -52,51 +55,55 @@ export default function Testimonials() {
   return (
     <section className="py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="bento-card grid gap-8 p-6 md:grid-cols-2 md:gap-10 md:p-10">
-          <div
-            className="min-h-[320px] rounded-2xl bg-gradient-to-br from-amber-600/50 via-yellow-700/30 to-amber-900/40 md:min-h-[400px]"
-            role="img"
-            aria-label={`${featured.name} portrait`}
-          />
-          <div className="flex flex-col justify-center">
-            <p className="text-base leading-relaxed text-muted-light md:text-lg">
-              &ldquo;{featured.quote}&rdquo;
-            </p>
-            <p className="mt-6 text-lg font-semibold text-foreground">
-              {featured.name}
-            </p>
-            <p className="text-sm text-muted">{featured.role}</p>
-            <div className="mt-8 grid grid-cols-2 gap-6 border-t border-white/5 pt-8">
-              {featured.stats.map((stat) => (
-                <div key={stat.label}>
-                  <p className="text-3xl font-bold text-foreground md:text-4xl">
-                    {stat.value}
-                  </p>
-                  <p className="mt-1 text-sm text-muted">{stat.label}</p>
-                </div>
-              ))}
+        <Reveal>
+          <div className="bento-card grid gap-8 p-6 md:grid-cols-2 md:gap-10 md:p-10">
+            <div
+              className="min-h-[320px] rounded-2xl bg-gradient-to-br from-amber-600/50 via-yellow-700/30 to-amber-900/40 md:min-h-[400px]"
+              role="img"
+              aria-label={`${featured.name} portrait`}
+            />
+            <div className="flex flex-col justify-center">
+              <p className="text-base leading-relaxed text-muted-light md:text-lg">
+                &ldquo;{featured.quote}&rdquo;
+              </p>
+              <p className="mt-6 text-lg font-semibold text-foreground">
+                {featured.name}
+              </p>
+              <p className="text-sm text-muted">{featured.role}</p>
+              <div className="mt-8 grid grid-cols-2 gap-6 border-t border-white/5 pt-8">
+                {featured.stats.map((stat) => (
+                  <div key={stat.label}>
+                    <p className="text-3xl font-bold text-foreground md:text-4xl">
+                      {stat.value}
+                    </p>
+                    <p className="mt-1 text-sm text-muted">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        </Reveal>
 
-        <div className="mt-5 grid gap-4 md:grid-cols-2 md:gap-5">
+        <Stagger className="mt-5 grid gap-4 md:grid-cols-2 md:gap-5">
           {testimonials.map((t) => (
-            <article key={t.name} className="bento-card p-6 md:p-8">
-              <p className="text-sm leading-relaxed text-muted-light md:text-base">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-              <div className="mt-6 flex items-center gap-3">
-                <Avatar initials={t.initials} />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">
-                    {t.name}
-                  </p>
-                  <p className="text-xs text-muted">{t.role}</p>
+            <StaggerItem key={t.name}>
+              <article className="bento-card h-full p-6 md:p-8">
+                <p className="text-sm leading-relaxed text-muted-light md:text-base">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="mt-6 flex items-center gap-3">
+                  <Avatar initials={t.initials} />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">
+                      {t.name}
+                    </p>
+                    <p className="text-xs text-muted">{t.role}</p>
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );

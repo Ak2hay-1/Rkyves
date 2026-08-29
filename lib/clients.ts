@@ -18,7 +18,7 @@ export const clientCaseStudies: ClientCaseStudy[] = [
     headline: "From online store to full retail operations",
     description:
       "End-to-end digital setup for a football jersey brand — storefront, admin panel, ERP, and POS working as one unified system.",
-    tags: ["Storefront", "Admin Panel", "ERP", "POS"],
+    tags: ["Storefront", "Admin Panel", "Cullinos POS", "Cullinos ERP"],
     accent: "from-blue-600/20 to-primary/10",
   },
   {

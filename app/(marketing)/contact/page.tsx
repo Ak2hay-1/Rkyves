@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Mail, MessageCircle, Phone } from "lucide-react";
 import Hero from "@/components/Hero";
 import ContactForm from "@/components/ContactForm";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import {
   contactInfo,
   getMailtoUrl,
@@ -75,10 +74,6 @@ export default function ContactPage() {
                     <p className="text-sm text-muted">{contactInfo.phone}</p>
                   </div>
                 </div>
-              </div>
-
-              <div className="mt-8 hidden sm:block">
-                <WhatsAppButton floating={false} label="Open WhatsApp Chat" />
               </div>
             </div>
 

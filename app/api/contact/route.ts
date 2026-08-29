@@ -61,6 +61,24 @@ export async function POST(request: Request) {
       );
     }
 
+    // Also create lead in Rkyves OS if database is configured
+    if (process.env.DATABASE_URL) {
+      try {
+        const { getDb, schema } = await import("@/lib/db");
+        const db = getDb();
+        await db.insert(schema.leads).values({
+          name,
+          email,
+          phone: phone || undefined,
+          source: "Website Contact Form",
+          stage: "lead",
+          requirement: message,
+          notes: `Service interest: ${serviceLabel}`,
+        });
+      } catch (leadError) {
+        console.error("Failed to create lead:", leadError);
+      }
+    }
     return NextResponse.json({
       message: "Thank you! Your message has been sent successfully.",
     });

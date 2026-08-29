@@ -9,9 +9,9 @@ const footerLinks = {
     { label: "Contact", href: "/contact" },
   ],
   Product: [
+    { label: "Cullinos Restaurant OS", href: "/cullinos" },
     { label: "Websites & Stores", href: "/services" },
     { label: "Admin Panel", href: "/services" },
-    { label: "ERP / POS", href: "/services" },
     { label: "Hosting", href: "/services" },
   ],
   Resources: [
@@ -42,7 +42,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-foreground/80 transition-colors hover:text-foreground"
+                      className="footer-link text-sm text-foreground/80 transition-colors hover:text-foreground"
                     >
                       {link.label}
                     </Link>
@@ -58,10 +58,10 @@ export default function Footer() {
             Copyright &copy; {year} {siteConfig.name}. All Rights Reserved
           </p>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-foreground">
+            <Link href="/privacy" className="footer-link hover:text-foreground">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-foreground">
+            <Link href="/terms" className="footer-link hover:text-foreground">
               Terms &amp; Conditions
             </Link>
           </div>

@@ -31,7 +31,7 @@ export default function TermsPage() {
                 {siteConfig.url}
               </Link>{" "}
               or contacting us for services, you agree to these Terms &amp; Conditions and our{" "}
-              <Link href="/privacy" className="text.primary hover:underline">
+              <Link href="/privacy" className="text-primary hover:underline">
                 Privacy Policy
               </Link>
               . If you do not agree, do not use the site.

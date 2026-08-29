@@ -10,7 +10,7 @@ export default function ServiceCard({ service, showLink = true }: ServiceCardPro
   const Icon = service.icon;
 
   return (
-    <article className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
+    <article className="service-card group flex h-full flex-col rounded-2xl border border-border bg-surface p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
       <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
         <Icon className="h-6 w-6" aria-hidden="true" />
       </div>
@@ -23,7 +23,7 @@ export default function ServiceCard({ service, showLink = true }: ServiceCardPro
       {showLink && (
         <Link
           href="/services"
-          className="inline-flex items-center text-sm font-medium text-primary hover:text-primary-hover transition-colors"
+          className="inline-flex items-center text-sm font-medium text-primary transition-colors hover:text-primary-hover"
         >
           Learn more
           <span className="ml-1 transition-transform group-hover:translate-x-1">

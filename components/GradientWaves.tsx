@@ -2,7 +2,7 @@ export default function GradientWaves() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       <svg
-        className="absolute bottom-0 left-0 w-full opacity-60"
+        className="absolute bottom-0 left-0 w-full animate-wave-drift opacity-60"
         viewBox="0 0 1440 600"
         fill="none"
         preserveAspectRatio="xMidYMax slice"

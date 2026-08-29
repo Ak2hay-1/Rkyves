@@ -190,10 +190,10 @@ export default function ContactForm() {
       {statusMessage && (
         <div
           role="status"
-          className={`rounded-lg px-4 py-3 text-sm ${
+          className={`rounded-lg border px-4 py-3 text-sm ${
             status === "success"
-              ? "bg-green-50 text-green-800 border border-green-200"
-              : "bg-red-50 text-red-800 border border-red-200"
+              ? "border-green-500/30 bg-green-500/10 text-green-400"
+              : "border-red-500/30 bg-red-500/10 text-red-400"
           }`}
         >
           {statusMessage}

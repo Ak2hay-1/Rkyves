@@ -4,6 +4,10 @@ import {
   Plug,
   MonitorSmartphone,
   Cloud,
+  Shield,
+  HardDrive,
+  Activity,
+  Lock,
   type LucideIcon,
 } from "lucide-react";
 
@@ -37,6 +41,40 @@ export const surfaceVsDepth = {
   ctaSubheading:
     "Let Rkyves build and maintain the technology behind your business — from your first website to full enterprise operations.",
 };
+
+export type InfraLayer = {
+  icon: LucideIcon;
+  label: string;
+  description: string;
+};
+
+export const infraLayers: InfraLayer[] = [
+  {
+    icon: Cloud,
+    label: "Hosting & CDN",
+    description: "Fast, reliable servers with global content delivery.",
+  },
+  {
+    icon: Lock,
+    label: "SSL & Security",
+    description: "HTTPS certificates, firewall rules, and threat protection.",
+  },
+  {
+    icon: HardDrive,
+    label: "Backups",
+    description: "Automated daily backups with tested restore procedures.",
+  },
+  {
+    icon: Activity,
+    label: "Monitoring & Uptime",
+    description: "24/7 health checks with instant alerts when something breaks.",
+  },
+  {
+    icon: Shield,
+    label: "Updates & Patches",
+    description: "Security updates and dependency maintenance handled for you.",
+  },
+];
 
 export const contactInfo = {
   email: "sales@rkyves.com",
@@ -182,7 +220,29 @@ export const aboutContent = {
     { step: "Website", description: "Start with a professional online presence" },
     { step: "E-commerce", description: "Add online selling capabilities" },
     { step: "Admin Panel", description: "Manage everything from one place" },
-    { step: "ERP / POS", description: "Scale with business management tools" },
+    { step: "Cullinos", description: "Restaurant OS — POS, kitchen, inventory, and GST billing" },
+  ],
+};
+
+export const cullinosProduct = {
+  name: "Cullinos",
+  tagline: "Restaurant Operating System",
+  description:
+    "Cullinos is Rkyves's all-in-one restaurant platform — POS, kitchen display, floor staff, guest ordering, inventory, and GST billing from one cloud backend.",
+  url: "https://cullinos.com",
+  features: [
+    "POS & kitchen display (KDS)",
+    "Waiter app & QR guest ordering",
+    "Menu, tables, and unified orders",
+    "Inventory, recipes, and purchasing",
+    "GST-native billing for India",
+    "Offline gateway for unreliable connectivity",
+    "Multi-outlet management for chains",
+  ],
+  plans: [
+    { name: "Starter", price: "₹2,999/mo", outlets: 1, terminals: 2 },
+    { name: "Professional", price: "₹7,999/mo", outlets: 3, terminals: 6 },
+    { name: "Enterprise", price: "Custom", outlets: "Unlimited", terminals: "Per contract" },
   ],
 };
 
@@ -191,6 +251,7 @@ export const serviceInterestOptions = [
   { value: "websites", label: "Websites & Online Stores" },
   { value: "admin-panel", label: "Admin Panel" },
   { value: "integrations", label: "Business Integrations" },
+  { value: "cullinos", label: "Cullinos Restaurant OS" },
   { value: "erp-pos", label: "ERP / POS Software" },
   { value: "hosting", label: "Hosting & Infrastructure" },
   { value: "other", label: "Other / Not sure yet" },

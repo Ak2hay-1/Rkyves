@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import LandingHero from "@/components/LandingHero";
+import SurfaceVsDepth from "@/components/SurfaceVsDepth";
 import TrustedBy from "@/components/TrustedBy";
 import ClientShowcase from "@/components/ClientShowcase";
 import FeatureShowcase from "@/components/FeatureShowcase";
@@ -8,12 +10,24 @@ import BentoGrid from "@/components/BentoGrid";
 import Testimonials from "@/components/Testimonials";
 import SectionHeading from "@/components/SectionHeading";
 import ServiceCard from "@/components/ServiceCard";
+import Reveal from "@/components/motion/Reveal";
 import {
   approachItems,
   services,
+  siteConfig,
   surfaceVsDepth,
   whyRkyves,
 } from "@/lib/constants";
+
+export const metadata: Metadata = {
+  title: siteConfig.tagline,
+  description: siteConfig.description,
+  openGraph: {
+    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    description: siteConfig.description,
+    url: siteConfig.url,
+  },
+};
 
 const orderedServices = [
   ...services.filter((s) => s.id === "hosting"),
@@ -24,6 +38,7 @@ export default function HomePage() {
   return (
     <>
       <LandingHero />
+      <SurfaceVsDepth />
       <TrustedBy />
       <ClientShowcase />
       <FeatureShowcase />
@@ -32,13 +47,17 @@ export default function HomePage() {
 
       <section id="services" className="py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionHeading
-            title={surfaceVsDepth.servicesHeading}
-            subtitle={surfaceVsDepth.servicesSubheading}
-          />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {orderedServices.map((service) => (
-              <ServiceCard key={service.id} service={service} />
+          <Reveal>
+            <SectionHeading
+              title={surfaceVsDepth.servicesHeading}
+              subtitle={surfaceVsDepth.servicesSubheading}
+            />
+          </Reveal>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {orderedServices.map((service, index) => (
+              <Reveal key={service.id} delay={index * 0.05}>
+                <ServiceCard service={service} />
+              </Reveal>
             ))}
           </div>
         </div>
@@ -46,7 +65,8 @@ export default function HomePage() {
 
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="bento-card grid gap-10 p-8 md:grid-cols-2 md:p-12 lg:p-16">
+          <Reveal>
+            <div className="bento-card grid gap-10 p-8 md:grid-cols-2 md:p-12 lg:p-16">
             <div>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
                 {whyRkyves.title}
@@ -73,13 +93,15 @@ export default function HomePage() {
                 ))}
               </ul>
             </div>
-          </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
       <section className="pb-24 pt-8 md:pb-32">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="bento-card relative overflow-hidden px-8 py-12 text-center md:px-16 md:py-16">
+          <Reveal>
+            <div className="bento-card relative overflow-hidden px-8 py-12 text-center md:px-16 md:py-16">
             <div className="pointer-events-none absolute inset-0 chart-glow" />
             <div className="relative">
               <h2 className="text-3xl font-bold text-foreground md:text-4xl">
@@ -104,7 +126,8 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-          </div>
+            </div>
+          </Reveal>
         </div>
       </section>
     </>
