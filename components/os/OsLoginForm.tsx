@@ -75,7 +75,7 @@ export function OsLoginForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@rkyves.com"
+                placeholder="you@rkyves.com"
                 required
                 autoComplete="email"
               />

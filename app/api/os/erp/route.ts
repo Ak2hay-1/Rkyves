@@ -1,0 +1,42 @@
+import { NextRequest, NextResponse } from "next/server";
+import { desc } from "drizzle-orm";
+import { getDb, schema } from "@/lib/db";
+import { requirePermission, requireDb, parseBody, logAudit } from "@/lib/os/api-utils";
+import { erpDeploymentSchema } from "@/lib/validations/os";
+
+export async function GET() {
+  const auth = await requirePermission("infrastructure.view");
+  if (!auth.ok) return auth.response;
+  const dbErr = requireDb();
+  if (dbErr) return dbErr;
+
+  const db = getDb();
+  const deployments = await db.select().from(schema.erpDeployments).orderBy(desc(schema.erpDeployments.updatedAt));
+  return NextResponse.json({ deployments });
+}
+
+export async function POST(req: NextRequest) {
+  const auth = await requirePermission("infrastructure.manage");
+  if (!auth.ok) return auth.response;
+  const dbErr = requireDb();
+  if (dbErr) return dbErr;
+
+  const parsed = await parseBody(req, erpDeploymentSchema);
+  if (!parsed.ok) return parsed.response;
+
+  const db = getDb();
+  const [deployment] = await db
+    .insert(schema.erpDeployments)
+    .values({
+      clientId: parsed.data.clientId,
+      serviceId: parsed.data.serviceId ?? undefined,
+      version: parsed.data.version,
+      users: parsed.data.users,
+      deployment: parsed.data.deployment,
+      modules: parsed.data.modules,
+    })
+    .returning();
+
+  await logAudit(auth.user.id, "create", "erp_deployment", deployment.id, {}, req);
+  return NextResponse.json({ deployment }, { status: 201 });
+}

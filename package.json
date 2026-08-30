@@ -9,9 +9,21 @@
     "lint": "eslint",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
-    "db:seed": "npx tsx scripts/seed.ts"
+    "db:seed": "npx tsx scripts/seed.ts",
+    "db:prod-reset": "tsx scripts/prod-reset.ts",
+    "test:smoke": "playwright test --project=setup --project=smoke",
+    "test:api": "playwright test --project=setup --project=api",
+    "test:functional": "playwright test --project=setup --project=functional --project=portal-functional --project=marketing-functional --project=cleanup",
+    "test:prod": "playwright test --project=setup --project=smoke --project=api --project=functional --project=portal-functional --project=marketing-functional --project=cleanup",
+    "test:prod:full": "playwright test",
+    "test:integrations": "playwright test --project=setup --project=integrations --project=cleanup",
+    "test:cleanup": "tsx scripts/test-cleanup.ts",
+    "test:summary": "tsx scripts/test-summary.ts",
+    "test:report": "playwright show-report playwright-report"
   },
   "dependencies": {
+    "@neon/config": "^1.1.0",
+    "@neon/env": "^1.1.6",
     "@neondatabase/serverless": "^1.1.0",
     "@react-pdf/renderer": "^4.9.0",
     "@vercel/analytics": "^2.0.1",
@@ -34,6 +46,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",

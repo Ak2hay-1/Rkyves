@@ -1,0 +1,50 @@
+name: Production Tests
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  test-prod:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Run production test suite
+        env:
+          BASE_URL: https://rkyves.com
+          SMOKE_OS_EMAIL: rkyves.com@gmail.com
+          SMOKE_OS_PASSWORD: ${{ secrets.SMOKE_OS_PASSWORD }}
+          SMOKE_PORTAL_EMAIL: ${{ secrets.SMOKE_PORTAL_EMAIL }}
+          SMOKE_PORTAL_PASSWORD: ${{ secrets.SMOKE_PORTAL_PASSWORD }}
+          SMOKE_SALES_EMAIL: ${{ secrets.SMOKE_SALES_EMAIL }}
+          SMOKE_SALES_PASSWORD: ${{ secrets.SMOKE_SALES_PASSWORD }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run test:prod
+
+      - name: Print summary
+        if: always()
+        run: npm run test:summary
+
+      - name: Upload test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

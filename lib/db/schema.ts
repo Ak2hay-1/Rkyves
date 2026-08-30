@@ -870,6 +870,40 @@ export const auditLogs = pgTable(
   ]
 );
 
+// ─── Settings ────────────────────────────────────────────────────────────────
+
+export const orgSettings = pgTable("org_settings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyName: varchar("company_name", { length: 255 }).default("Rkyves"),
+  address: text("address"),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 100 }),
+  country: varchar("country", { length: 100 }).default("India"),
+  gst: varchar("gst", { length: 20 }),
+  pan: varchar("pan", { length: 20 }),
+  phone: varchar("phone", { length: 20 }),
+  email: varchar("email", { length: 255 }),
+  logoUrl: text("logo_url"),
+  invoicePrefix: varchar("invoice_prefix", { length: 20 }).default("INV"),
+  paymentTerms: text("payment_terms"),
+  timezone: varchar("timezone", { length: 50 }).default("Asia/Kolkata"),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const userPreferences = pgTable(
+  "user_preferences",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    emailNotifications: boolean("email_notifications").default(true),
+    pushNotifications: boolean("push_notifications").default(true),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("user_preferences_user_idx").on(t.userId)]
+);
+
 // ─── Relations ───────────────────────────────────────────────────────────────
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -919,4 +953,7 @@ export type Activity = typeof activities.$inferSelect;
 export type ProductPlan = typeof productPlans.$inferSelect;
 export type CullinosTenant = typeof cullinosTenants.$inferSelect;
 export type SaasSubscription = typeof saasSubscriptions.$inferSelect;
+export type OrgSettings = typeof orgSettings.$inferSelect;
+export type UserPreferences = typeof userPreferences.$inferSelect;
+export type Renewal = typeof renewals.$inferSelect;
 export type UserRole = (typeof userRoleEnum.enumValues)[number];

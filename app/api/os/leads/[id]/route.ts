@@ -65,3 +65,26 @@ export async function PATCH(
   await logAudit(user.id, "update", "lead", id, body, req);
   return NextResponse.json({ lead });
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const user = await getSessionUser();
+  if (!user || !hasPermission(user.role, "leads.manage")) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  if (!isDbConfigured()) {
+    return NextResponse.json({ error: "Database not configured" }, { status: 503 });
+  }
+
+  const { id } = await params;
+  const db = getDb();
+  const [lead] = await db.delete(schema.leads).where(eq(schema.leads.id, id)).returning();
+  if (!lead) {
+    return NextResponse.json({ error: "Lead not found" }, { status: 404 });
+  }
+
+  await logAudit(user.id, "delete", "lead", id, { name: lead.name }, req);
+  return NextResponse.json({ success: true });
+}

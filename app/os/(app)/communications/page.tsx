@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { isDbConfigured, getDb, schema } from "@/lib/db";
+import { getSessionUser } from "@/lib/os/auth/session";
+import { hasPermission } from "@/lib/os/auth/rbac";
 import { OsModuleShell, OsTable } from "@/components/os/OsModuleShell";
+import { CommunicationFormButton } from "@/components/os/CommunicationForm";
 import { SetupRequired } from "@/components/os/SetupRequired";
 import { formatDate } from "@/lib/utils";
 import { eq } from "drizzle-orm";
@@ -17,8 +20,11 @@ export default async function CommunicationsPage() {
     .leftJoin(schema.clients, eq(schema.communications.clientId, schema.clients.id))
     .orderBy(schema.communications.createdAt);
 
+  const user = await getSessionUser();
+  const canManage = user ? hasPermission(user.role, "communications.manage") : false;
+
   return (
-    <OsModuleShell title="Communication" description="WhatsApp, email, calls, and notes" dbConfigured isEmpty={items.length === 0} emptyTitle="No communications">
+    <OsModuleShell title="Communication" description="WhatsApp, email, calls, and notes" dbConfigured isEmpty={items.length === 0} emptyTitle="No communications" actions={<CommunicationFormButton canManage={canManage} />}>
       <OsTable
         headers={["Type", "Client", "Subject", "Direction", "Date"]}
         rows={items.map(({ comm, companyName }) => [

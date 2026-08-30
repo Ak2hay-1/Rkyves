@@ -1,16 +1,21 @@
 import Link from "next/link";
 import { isDbConfigured } from "@/lib/db";
 import { getPayments } from "@/lib/os/module-queries";
+import { getSessionUser } from "@/lib/os/auth/session";
+import { hasPermission } from "@/lib/os/auth/rbac";
 import { OsModuleShell, OsTable } from "@/components/os/OsModuleShell";
+import { PaymentActions } from "@/components/os/PaymentForm";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export const metadata = { title: "Payments — Rkyves OS" };
 
 export default async function PaymentsPage() {
   const items = isDbConfigured() ? await getPayments() : [];
+  const user = await getSessionUser();
+  const canManage = user ? hasPermission(user.role, "finance.manage") : false;
 
   return (
-    <OsModuleShell title="Payments" description="Payment history across all clients" dbConfigured={isDbConfigured()} isEmpty={items.length === 0} emptyTitle="No payments">
+    <OsModuleShell title="Payments" description="Payment history across all clients" dbConfigured={isDbConfigured()} isEmpty={items.length === 0} emptyTitle="No payments" actions={<PaymentActions canManage={canManage} />}>
       <OsTable
         headers={["Client", "Amount", "Method", "Invoice", "Date", "Reference"]}
         rows={items.map(({ payment, companyName, invoiceNumber }) => [

@@ -1,7 +1,11 @@
+import Link from "next/link";
 import { isDbConfigured } from "@/lib/db";
 import { getLeads } from "@/lib/os/module-queries";
+import { getSessionUser } from "@/lib/os/auth/session";
+import { hasPermission } from "@/lib/os/auth/rbac";
 import { OsModuleShell } from "@/components/os/OsModuleShell";
 import { LeadCard } from "@/components/os/LeadActions";
+import { LeadFormButton } from "@/components/os/LeadForm";
 import { SetupRequired } from "@/components/os/SetupRequired";
 
 export const metadata = { title: "Leads — Rkyves OS" };
@@ -14,6 +18,8 @@ export default async function LeadsPage({ searchParams }: PageProps<"/os/leads">
   const params = await searchParams;
   const stage = typeof params.stage === "string" ? params.stage : "all";
   const leads = await getLeads(stage);
+  const user = await getSessionUser();
+  const canManage = user ? hasPermission(user.role, "leads.manage") : false;
 
   return (
     <OsModuleShell
@@ -22,6 +28,7 @@ export default async function LeadsPage({ searchParams }: PageProps<"/os/leads">
       dbConfigured
       isEmpty={leads.length === 0}
       emptyTitle="No leads yet"
+      actions={<LeadFormButton canManage={canManage} />}
     >
       <div className="mb-6 flex flex-wrap gap-2">
         {stages.map((s) => (

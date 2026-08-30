@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { isDbConfigured } from "@/lib/db";
 import { getInvoices } from "@/lib/os/module-queries";
+import { getSessionUser } from "@/lib/os/auth/session";
+import { hasPermission } from "@/lib/os/auth/rbac";
 import { OsModuleShell, OsTable } from "@/components/os/OsModuleShell";
+import { InvoiceActions } from "@/components/os/InvoiceForm";
 import { Badge } from "@/components/os/ui/badge";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -11,9 +14,11 @@ export default async function InvoicesPage({ searchParams }: PageProps<"/os/invo
   const params = await searchParams;
   const status = typeof params.status === "string" ? params.status : "all";
   const items = isDbConfigured() ? await getInvoices(status) : [];
+  const user = await getSessionUser();
+  const canManage = user ? hasPermission(user.role, "finance.manage") : false;
 
   return (
-    <OsModuleShell title="Invoices" description="Manage billing and invoices" dbConfigured={isDbConfigured()} isEmpty={items.length === 0} emptyTitle="No invoices">
+    <OsModuleShell title="Invoices" description="Manage billing and invoices" dbConfigured={isDbConfigured()} isEmpty={items.length === 0} emptyTitle="No invoices" actions={<InvoiceActions canManage={canManage} />}>
       <div className="mb-4 flex gap-2">
         {["all", "outstanding", "paid", "overdue", "draft"].map((s) => (
           <Link key={s} href={`/os/invoices${s === "all" ? "" : `?status=${s}`}`} className={`rounded-lg px-3 py-1.5 text-sm capitalize ${status === s ? "bg-primary/15 text-primary" : "text-muted hover:bg-white/5"}`}>{s}</Link>

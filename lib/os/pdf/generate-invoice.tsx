@@ -4,8 +4,11 @@ import { getDb, schema } from "@/lib/db";
 import { InvoicePdfDocument, type InvoicePdfData } from "./invoice-pdf";
 import { formatDate } from "@/lib/utils";
 
+import { getOrgSettings } from "@/lib/os/settings";
+
 export async function generateInvoicePdf(invoiceId: string): Promise<Buffer> {
   const db = getDb();
+  const org = await getOrgSettings();
 
   const [invoice] = await db
     .select()
@@ -33,6 +36,14 @@ export async function generateInvoicePdf(invoiceId: string): Promise<Buffer> {
     status: invoice.status,
     issueDate: formatDate(invoice.createdAt),
     dueDate: formatDate(invoice.dueDate),
+    org: {
+      companyName: org.companyName || "Rkyves",
+      address: org.address,
+      city: org.city,
+      gst: org.gst,
+      email: org.email,
+      phone: org.phone,
+    },
     client: {
       companyName: client.companyName,
       contactPerson: client.contactPerson,

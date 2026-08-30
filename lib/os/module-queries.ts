@@ -40,12 +40,45 @@ export async function getTasks() {
       task: schema.tasks,
       projectName: schema.projects.name,
       companyName: schema.clients.companyName,
+      clientId: schema.projects.clientId,
     })
     .from(schema.tasks)
     .leftJoin(schema.projects, eq(schema.tasks.projectId, schema.projects.id))
     .leftJoin(schema.clients, eq(schema.projects.clientId, schema.clients.id))
     .where(sql`${schema.tasks.status} != 'completed'`)
     .orderBy(schema.tasks.dueDate);
+}
+
+export async function getProjectById(id: string) {
+  const db = getDb();
+  const [row] = await db
+    .select({
+      project: schema.projects,
+      companyName: schema.clients.companyName,
+    })
+    .from(schema.projects)
+    .leftJoin(schema.clients, eq(schema.projects.clientId, schema.clients.id))
+    .where(eq(schema.projects.id, id))
+    .limit(1);
+
+  if (!row) return null;
+
+  const tasks = await db.select().from(schema.tasks).where(eq(schema.tasks.projectId, id)).orderBy(schema.tasks.sortOrder);
+  return { ...row, tasks };
+}
+
+export async function getTicketById(id: string) {
+  const db = getDb();
+  const [row] = await db
+    .select({
+      ticket: schema.tickets,
+      companyName: schema.clients.companyName,
+    })
+    .from(schema.tickets)
+    .leftJoin(schema.clients, eq(schema.tickets.clientId, schema.clients.id))
+    .where(eq(schema.tickets.id, id))
+    .limit(1);
+  return row ?? null;
 }
 
 export async function getInvoices(status?: string) {

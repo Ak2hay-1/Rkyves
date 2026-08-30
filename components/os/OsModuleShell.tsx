@@ -25,7 +25,7 @@ export function OsModuleShell({
   return (
     <div>
       <PageHeader title={title} description={description} actions={actions} />
-      {isEmpty ? <EmptyState title={emptyTitle} description="Run npm run db:seed to load sample data." /> : children}
+      {isEmpty ? <EmptyState title={emptyTitle} description="No records yet. Add your first entry to get started." /> : children}
     </div>
   );
 }

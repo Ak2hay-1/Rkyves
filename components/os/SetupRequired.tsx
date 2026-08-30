@@ -19,7 +19,7 @@ export function SetupRequired() {
       <Card>
         <CardHeader>
           <CardTitle>Quick Setup</CardTitle>
-          <CardDescription>Configure your environment and seed sample data</CardDescription>
+          <CardDescription>Configure your environment and initialize the database</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
@@ -32,17 +32,17 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000`}
           </div>
 
           <div>
-            <p className="mb-2 text-sm font-medium">2. Push schema & seed data:</p>
+            <p className="mb-2 text-sm font-medium">2. Push schema & create admin:</p>
             <pre className="overflow-x-auto rounded-lg border border-border bg-surface p-4 text-xs">
 {`npm run db:push
-npm run db:seed`}
+CONFIRM_PROD_RESET=yes npm run db:prod-reset`}
             </pre>
           </div>
 
           <div className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm">
             <Terminal className="h-4 w-4 text-primary" />
             <span>
-              Default login: <strong>admin@rkyves.com</strong> / <strong>admin123</strong>
+              <code className="rounded bg-white/5 px-1.5 py-0.5">db:prod-reset</code> prints a one-time super admin password. Save it immediately.
             </span>
           </div>
 

@@ -1,17 +1,44 @@
 /**
- * Seed Rkyves OS with realistic sample data.
+ * Seed Rkyves OS with realistic sample data (development only).
  * Run: npm run db:seed
+ *
+ * For production, use: CONFIRM_PROD_RESET=yes npm run db:prod-reset
  */
+import { existsSync } from "node:fs";
+import { loadEnvFile } from "node:process";
 import { neon } from "@neondatabase/serverless";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
 import * as schema from "../lib/db/schema";
 import { hashPassword } from "../lib/os/auth/password";
 import { encrypt } from "../lib/os/encryption";
 
+function loadLocalEnv() {
+  for (const file of [".env", ".env.local"]) {
+    if (!existsSync(file)) continue;
+    try {
+      loadEnvFile(file);
+    } catch {
+      // Ignore missing or unreadable env files.
+    }
+  }
+}
+
+loadLocalEnv();
+
+const SAMPLE_INVOICE_NUMBER = "INV-JER-001";
+
+function printLoginHints() {
+  console.log("  OS Login: admin@rkyves.com / admin123");
+  console.log("  Portal Login: contact@jerzyfy.in / client123");
+  console.log("  Clients: Jerzyfy, Yathartha Foods, QuickBite Cafe");
+  console.log("  Team: sales@, pm@, dev@, support@, finance@rkyves.com (same password)");
+}
+
 async function seed() {
-  const url = process.env.DATABASE_URL;
+  const url = process.env.DATABASE_URL?.trim();
   if (!url) {
-    console.error("DATABASE_URL is required");
+    console.error("DATABASE_URL is required. Add it to .env.local or export it in your shell.");
     process.exit(1);
   }
   if (!process.env.ENCRYPTION_KEY || process.env.ENCRYPTION_KEY.length < 32) {
@@ -49,13 +76,49 @@ async function seed() {
   if (admin?.id) {
     userId = admin.id;
   } else {
-    const [existing] = await db.select().from(schema.users).limit(1);
+    const [existing] = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.email, "admin@rkyves.com"))
+      .limit(1);
     if (!existing) {
       console.error("Could not create admin user");
       process.exit(1);
     }
     userId = existing.id;
     console.log("Admin already exists, skipping user creation...");
+  }
+
+  const [sampleInvoice] = await db
+    .select({ id: schema.invoices.id })
+    .from(schema.invoices)
+    .where(eq(schema.invoices.invoiceNumber, SAMPLE_INVOICE_NUMBER))
+    .limit(1);
+
+  if (sampleInvoice) {
+    console.log("Sample data already present, skipping demo records...");
+    const clientPasswordHash = await hashPassword("client123");
+    const [jerzyfy] = await db
+      .select()
+      .from(schema.clients)
+      .where(eq(schema.clients.email, "contact@jerzyfy.in"))
+      .limit(1);
+    if (jerzyfy) {
+      await db
+        .insert(schema.users)
+        .values({
+          email: "contact@jerzyfy.in",
+          name: "Jerzy Thomas",
+          passwordHash: clientPasswordHash,
+          role: "client",
+          clientId: jerzyfy.id,
+          phone: "+91 9876500001",
+        })
+        .onConflictDoNothing();
+    }
+    console.log("✓ Seed complete (already seeded)!");
+    printLoginHints();
+    return;
   }
 
   // Team members
@@ -218,18 +281,33 @@ async function seed() {
     }
 
     // Invoices
-    const [invoice] = await db.insert(schema.invoices).values({
-      invoiceNumber: `INV-${client.companyName.slice(0, 3).toUpperCase()}-001`,
-      clientId: client.id,
-      status: client.id === atRisk.id ? "overdue" : "paid",
-      subtotal: client.id === jerzyfy.id ? "185000" : client.id === yathartha.id ? "350000" : "35000",
-      tax: client.id === jerzyfy.id ? "33300" : client.id === yathartha.id ? "63000" : "6300",
-      total: client.id === jerzyfy.id ? "218300" : client.id === yathartha.id ? "413000" : "41300",
-      amountPaid: client.id === atRisk.id ? "20000" : client.id === jerzyfy.id ? "218300" : "413000",
-      dueDate: client.id === atRisk.id ? new Date(Date.now() - 15 * 24 * 60 * 60 * 1000) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      createdById: userId,
-      sentAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000),
-    }).returning();
+    const invoiceNumber = `INV-${client.companyName.slice(0, 3).toUpperCase()}-001`;
+    await db
+      .insert(schema.invoices)
+      .values({
+        invoiceNumber,
+        clientId: client.id,
+        status: client.id === atRisk.id ? "overdue" : "paid",
+        subtotal: client.id === jerzyfy.id ? "185000" : client.id === yathartha.id ? "350000" : "35000",
+        tax: client.id === jerzyfy.id ? "33300" : client.id === yathartha.id ? "63000" : "6300",
+        total: client.id === jerzyfy.id ? "218300" : client.id === yathartha.id ? "413000" : "41300",
+        amountPaid: client.id === atRisk.id ? "20000" : client.id === jerzyfy.id ? "218300" : "413000",
+        dueDate: client.id === atRisk.id ? new Date(Date.now() - 15 * 24 * 60 * 60 * 1000) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        createdById: userId,
+        sentAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000),
+      })
+      .onConflictDoNothing({ target: schema.invoices.invoiceNumber });
+
+    const [invoice] = await db
+      .select()
+      .from(schema.invoices)
+      .where(eq(schema.invoices.invoiceNumber, invoiceNumber))
+      .limit(1);
+
+    if (!invoice) {
+      console.error(`Could not create or find invoice ${invoiceNumber}`);
+      process.exit(1);
+    }
 
     if (client.id !== atRisk.id) {
       await db.insert(schema.payments).values({
@@ -244,32 +322,40 @@ async function seed() {
     }
 
     // Tickets
-    if (client.id === atRisk.id) {
-      await db.insert(schema.tickets).values({
-        ticketNumber: "TKT-QB-001",
-        clientId: client.id,
-        subject: "Website loading slowly",
-        description: "Homepage takes 8+ seconds to load",
-        priority: "high",
-        category: "website",
-        status: "in_progress",
-        assignedToId: supportId,
-        createdById: userId,
-      });
-    } else {
-      await db.insert(schema.tickets).values({
-        ticketNumber: `TKT-${client.companyName.slice(0, 2).toUpperCase()}-001`,
-        clientId: client.id,
-        subject: "Feature request: export reports",
-        description: "Need PDF export for monthly reports",
-        priority: "medium",
-        category: "general",
-        status: "resolved",
-        assignedToId: supportId,
-        resolvedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-        createdById: userId,
-      });
-    }
+    const ticketNumber =
+      client.id === atRisk.id
+        ? "TKT-QB-001"
+        : `TKT-${client.companyName.slice(0, 2).toUpperCase()}-001`;
+
+    await db
+      .insert(schema.tickets)
+      .values(
+        client.id === atRisk.id
+          ? {
+              ticketNumber,
+              clientId: client.id,
+              subject: "Website loading slowly",
+              description: "Homepage takes 8+ seconds to load",
+              priority: "high",
+              category: "website",
+              status: "in_progress",
+              assignedToId: supportId,
+              createdById: userId,
+            }
+          : {
+              ticketNumber,
+              clientId: client.id,
+              subject: "Feature request: export reports",
+              description: "Need PDF export for monthly reports",
+              priority: "medium",
+              category: "general",
+              status: "resolved",
+              assignedToId: supportId,
+              resolvedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+              createdById: userId,
+            }
+      )
+      .onConflictDoNothing({ target: schema.tickets.ticketNumber });
 
     // Activities
     await db.insert(schema.activities).values([
@@ -376,10 +462,7 @@ async function seed() {
   }).onConflictDoNothing();
 
   console.log("✓ Seed complete!");
-  console.log("  OS Login: admin@rkyves.com / admin123");
-  console.log("  Portal Login: contact@jerzyfy.in / client123");
-  console.log("  Clients: Jerzyfy, Yathartha Foods, QuickBite Cafe");
-  console.log("  Team: sales@, pm@, dev@, support@, finance@rkyves.com (same password)");
+  printLoginHints();
 }
 
 seed().catch((err) => {

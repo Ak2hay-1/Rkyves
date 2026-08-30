@@ -58,3 +58,55 @@ export async function GET(
     },
   });
 }
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const user = await getSessionUser();
+  if (!user || !hasPermission(user.role, "credentials.manage")) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  if (!isDbConfigured()) {
+    return NextResponse.json({ error: "Database not configured" }, { status: 503 });
+  }
+
+  const { id } = await params;
+  const body = await req.json();
+  const db = getDb();
+
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (body.name) updates.name = body.name;
+  if (body.category) updates.category = body.category;
+  if (body.username !== undefined) updates.username = body.username;
+  if (body.url !== undefined) updates.url = body.url;
+  if (body.notes !== undefined) updates.notes = body.notes;
+  if (body.password) updates.encryptedPassword = (await import("@/lib/os/encryption")).encrypt(body.password);
+
+  const [credential] = await db.update(schema.credentials).set(updates).where(eq(schema.credentials.id, id)).returning();
+  if (!credential) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  await logAudit(user.id, "update", "credential", id, { name: credential.name }, req);
+  return NextResponse.json({ credential: { id: credential.id, name: credential.name } });
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const user = await getSessionUser();
+  if (!user || !hasPermission(user.role, "credentials.manage")) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  if (!isDbConfigured()) {
+    return NextResponse.json({ error: "Database not configured" }, { status: 503 });
+  }
+
+  const { id } = await params;
+  const db = getDb();
+  const [credential] = await db.delete(schema.credentials).where(eq(schema.credentials.id, id)).returning();
+  if (!credential) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  await logAudit(user.id, "delete", "credential", id, { name: credential.name }, req);
+  return NextResponse.json({ success: true });
+}

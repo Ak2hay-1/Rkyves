@@ -6,6 +6,8 @@ import { Shield, Eye, EyeOff, Lock } from "lucide-react";
 import { Button } from "@/components/os/ui/button";
 import { Badge } from "@/components/os/ui/badge";
 
+import { CredentialsActions } from "@/components/os/CredentialsForm";
+
 type Credential = {
   id: string;
   clientId: string;
@@ -16,7 +18,7 @@ type Credential = {
   hasPassword: boolean;
 };
 
-export function CredentialsVault({ credentials, clients }: { credentials: Credential[]; clients: Record<string, string> }) {
+export function CredentialsVault({ credentials, clients, canManage = false }: { credentials: Credential[]; clients: Record<string, string>; canManage?: boolean }) {
   const [revealed, setRevealed] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState<string | null>(null);
 
@@ -75,6 +77,7 @@ export function CredentialsVault({ credentials, clients }: { credentials: Creden
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="purple"><Lock className="mr-1 h-3 w-3" />Encrypted</Badge>
+              {canManage && <CredentialsActions clientId={c.clientId} credential={c} canManage={canManage} />}
               {c.hasPassword && (
                 <Button size="sm" variant="secondary" onClick={() => revealPassword(c.id)} disabled={loading === c.id}>
                   {loading === c.id ? "..." : revealed[c.id] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

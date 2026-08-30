@@ -73,7 +73,7 @@ export default async function ClientsPage({
       {clients.length === 0 ? (
         <EmptyState
           title="No clients found"
-          description="Add your first client or run the seed script to load sample data."
+          description="Add your first client to get started."
           action={
             <Link href="/os/clients/new">
               <Button>Add Client</Button>

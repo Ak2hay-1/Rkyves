@@ -92,6 +92,17 @@ export function CullinosTenantActions({ tenantId, status }: { tenantId: string; 
     window.location.reload();
   }
 
+  async function deprovision() {
+    if (!confirm("Remove this Cullinos tenant record?")) return;
+    setLoading(true);
+    await fetch("/api/os/cullinos/deprovision", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tenantId }),
+    });
+    window.location.reload();
+  }
+
   return (
     <div className="flex gap-2">
       {status === "active" ? (
@@ -103,6 +114,9 @@ export function CullinosTenantActions({ tenantId, status }: { tenantId: string; 
           Reactivate
         </button>
       )}
+      <button onClick={deprovision} disabled={loading} className="rounded-lg border border-red-500/30 px-3 py-1.5 text-sm text-red-400">
+        Deprovision
+      </button>
       <a href="https://admin.cullinos.com" target="_blank" rel="noopener noreferrer" className="rounded-lg border border-border px-3 py-1.5 text-sm">
         Open Admin
       </a>

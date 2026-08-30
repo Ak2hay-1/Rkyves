@@ -24,6 +24,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/os/ui/car
 import { ProgressBar } from "@/components/os/ui/stats";
 import { SetupRequired } from "@/components/os/SetupRequired";
 import { CullinosProvisionForm, CullinosTenantActions } from "@/components/os/CullinosPanel";
+import { ClientEditDelete } from "@/components/os/ClientEditDelete";
+import { ProjectActions } from "@/components/os/ProjectForm";
+import { ServiceActions } from "@/components/os/ServiceForm";
+import { InvoiceActions } from "@/components/os/InvoiceForm";
+import { PaymentActions } from "@/components/os/PaymentForm";
+import { TicketActions } from "@/components/os/TicketForm";
+import { CredentialsActions } from "@/components/os/CredentialsForm";
+import { DocumentDeleteButton } from "@/components/os/DocumentDeleteButton";
+import { RenewalActions } from "@/components/os/RenewalForm";
+import { CommunicationFormButton } from "@/components/os/CommunicationForm";
+import { WebsiteActions } from "@/components/os/InfraForm";
+import { getSessionUser } from "@/lib/os/auth/session";
+import { hasPermission } from "@/lib/os/auth/rbac";
 import { formatCurrency, formatDate, daysUntil } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -58,6 +71,20 @@ export default async function Client360Page({
 
   const data = await getClient360(id);
   if (!data) notFound();
+
+  const user = await getSessionUser();
+  const perms = {
+    editClient: user ? hasPermission(user.role, "clients.edit") : false,
+    deleteClient: user ? hasPermission(user.role, "clients.delete") : false,
+    manageProjects: user ? hasPermission(user.role, "projects.manage") : false,
+    editServices: user ? hasPermission(user.role, "clients.edit") : false,
+    manageFinance: user ? hasPermission(user.role, "finance.manage") : false,
+    manageSupport: user ? hasPermission(user.role, "support.manage") : false,
+    manageCredentials: user ? hasPermission(user.role, "credentials.manage") : false,
+    manageDocuments: user ? hasPermission(user.role, "documents.manage") : false,
+    manageInfra: user ? hasPermission(user.role, "infrastructure.manage") : false,
+    manageComms: user ? hasPermission(user.role, "communications.manage") : false,
+  };
 
   const { client, services, projects, invoices, payments, tickets, activities, documents, renewals, websites, communications, cullinosTenants, saasSubscriptions, financials, summary } = data;
 
@@ -115,6 +142,7 @@ export default async function Client360Page({
             <MiniStat label="Active Services" value={summary.activeServices} />
             <MiniStat label="Open Tickets" value={summary.openTickets} danger={summary.openTickets > 0} />
           </div>
+          <ClientEditDelete client={client} canEdit={perms.editClient} canDelete={perms.deleteClient} />
         </div>
 
         {/* Health bar */}
@@ -187,7 +215,9 @@ export default async function Client360Page({
       )}
 
       {activeTab === "services" && (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <div className="mb-4"><ServiceActions clientId={id} canManage={perms.editServices} /></div>
+          <div className="grid gap-4 md:grid-cols-2">
           {services.map((s) => (
             <Card key={s.id}>
               <CardContent className="p-5">
@@ -196,9 +226,12 @@ export default async function Client360Page({
                     <p className="font-medium">{s.name}</p>
                     <p className="text-sm text-muted capitalize">{s.type.replace("_", " ")} · {s.plan || "Standard"}</p>
                   </div>
-                  <Badge variant={s.status === "active" ? "success" : s.status === "expired" ? "danger" : "warning"}>
-                    {s.status}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={s.status === "active" ? "success" : s.status === "expired" ? "danger" : "warning"}>
+                      {s.status}
+                    </Badge>
+                    <ServiceActions clientId={id} service={s} canManage={perms.editServices} />
+                  </div>
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
                   <div><span className="text-muted">Price:</span> {formatCurrency(Number(s.price))}</div>
@@ -209,11 +242,13 @@ export default async function Client360Page({
               </CardContent>
             </Card>
           ))}
+          </div>
         </div>
       )}
 
       {activeTab === "projects" && (
         <div className="space-y-4">
+          <ProjectActions clientId={id} canManage={perms.manageProjects} />
           {projects.map((p) => (
             <Card key={p.id}>
               <CardContent className="p-5">
@@ -222,7 +257,10 @@ export default async function Client360Page({
                     <Link href={`/os/projects/${p.id}`} className="font-medium hover:text-primary">{p.name}</Link>
                     <p className="text-sm text-muted capitalize">{p.status.replace("_", " ")} · {p.priority} priority</p>
                   </div>
-                  <span className="text-sm font-medium">{p.progress}%</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">{p.progress}%</span>
+                    <ProjectActions clientId={id} project={p} canManage={perms.manageProjects} />
+                  </div>
                 </div>
                 <ProgressBar value={p.progress} className="mt-3" />
                 <p className="mt-2 text-xs text-muted">Deadline: {formatDate(p.deadline)}</p>
@@ -235,7 +273,10 @@ export default async function Client360Page({
       {activeTab === "finance" && (
         <div className="grid gap-6 lg:grid-cols-2">
           <Card>
-            <CardHeader><CardTitle>Invoices</CardTitle></CardHeader>
+            <CardHeader className="flex-row items-center justify-between">
+              <CardTitle>Invoices</CardTitle>
+              <InvoiceActions clientId={id} canManage={perms.manageFinance} />
+            </CardHeader>
             <CardContent>
               <table className="w-full text-sm">
                 <thead>
@@ -244,15 +285,19 @@ export default async function Client360Page({
                     <th className="pb-2">Total</th>
                     <th className="pb-2">Status</th>
                     <th className="pb-2">Due</th>
+                    <th className="pb-2"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {invoices.map((inv) => (
                     <tr key={inv.id} className="border-t border-border">
-                      <td className="py-2">{inv.invoiceNumber}</td>
+                      <td className="py-2">
+                        <Link href={`/os/invoices/${inv.id}`} className="hover:text-primary">{inv.invoiceNumber}</Link>
+                      </td>
                       <td className="py-2">{formatCurrency(Number(inv.total))}</td>
                       <td className="py-2"><Badge variant={inv.status === "paid" ? "success" : inv.status === "overdue" ? "danger" : "default"}>{inv.status.replace("_", " ")}</Badge></td>
                       <td className="py-2 text-muted">{formatDate(inv.dueDate)}</td>
+                      <td className="py-2"><InvoiceActions clientId={id} invoice={inv} canManage={perms.manageFinance} /></td>
                     </tr>
                   ))}
                 </tbody>
@@ -260,7 +305,10 @@ export default async function Client360Page({
             </CardContent>
           </Card>
           <Card>
-            <CardHeader><CardTitle>Payments</CardTitle></CardHeader>
+            <CardHeader className="flex-row items-center justify-between">
+              <CardTitle>Payments</CardTitle>
+              <PaymentActions clientId={id} canManage={perms.manageFinance} />
+            </CardHeader>
             <CardContent>
               {payments.map((p) => (
                 <div key={p.id} className="flex justify-between border-b border-border py-3 last:border-0">
@@ -268,6 +316,7 @@ export default async function Client360Page({
                     <p className="font-medium text-emerald-400">{formatCurrency(Number(p.amount))}</p>
                     <p className="text-xs text-muted">{p.method.replace("_", " ")} · {formatDate(p.paidAt)}</p>
                   </div>
+                  <PaymentActions clientId={id} payment={p} canManage={perms.manageFinance} />
                 </div>
               ))}
             </CardContent>
@@ -277,6 +326,7 @@ export default async function Client360Page({
 
       {activeTab === "support" && (
         <div className="space-y-3">
+          <TicketActions clientId={id} canManage={perms.manageSupport} />
           {tickets.map((t) => (
             <Card key={t.id}>
               <CardContent className="flex items-center justify-between p-4">
@@ -284,7 +334,10 @@ export default async function Client360Page({
                   <Link href={`/os/tickets/${t.id}`} className="font-medium hover:text-primary">{t.ticketNumber}: {t.subject}</Link>
                   <p className="text-sm text-muted capitalize">{t.category} · {t.priority} priority</p>
                 </div>
-                <Badge variant={t.status === "closed" || t.status === "resolved" ? "success" : "info"}>{t.status.replace("_", " ")}</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant={t.status === "closed" || t.status === "resolved" ? "success" : "info"}>{t.status.replace("_", " ")}</Badge>
+                  <TicketActions clientId={id} ticket={t} canManage={perms.manageSupport} />
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -292,6 +345,8 @@ export default async function Client360Page({
       )}
 
       {activeTab === "timeline" && (
+        <div>
+          <div className="mb-4"><CommunicationFormButton clientId={id} canManage={perms.manageComms} /></div>
         <Card>
           <CardContent className="p-6">
             <div className="relative space-y-0">
@@ -313,17 +368,23 @@ export default async function Client360Page({
             </div>
           </CardContent>
         </Card>
+        </div>
       )}
 
       {activeTab === "infrastructure" && (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <div className="mb-4"><WebsiteActions clientId={id} canManage={perms.manageInfra} /></div>
+          <div className="grid gap-4 md:grid-cols-2">
           {websites.map((w) => (
             <Card key={w.id}>
               <CardContent className="p-5">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
                   <Server className="h-5 w-5 text-primary" />
                   <span className="font-medium">{w.name}</span>
                   <Badge variant={w.status === "online" ? "success" : w.status === "offline" ? "danger" : "warning"}>{w.status}</Badge>
+                  </div>
+                  <WebsiteActions clientId={id} website={w} canManage={perms.manageInfra} />
                 </div>
                 <div className="mt-3 space-y-1 text-sm">
                   <p><span className="text-muted">Domain:</span> {w.domain}</p>
@@ -333,6 +394,11 @@ export default async function Client360Page({
               </CardContent>
             </Card>
           ))}
+          </div>
+          <div className="mt-6">
+            <h3 className="mb-3 font-medium">Credentials</h3>
+            <CredentialsActions clientId={id} canManage={perms.manageCredentials} />
+          </div>
         </div>
       )}
 
@@ -381,12 +447,15 @@ export default async function Client360Page({
         <div className="grid gap-3">
           {documents.map((d) => (
             <Card key={d.id}>
-              <CardContent className="flex items-center gap-3 p-4">
+              <CardContent className="flex items-center justify-between gap-3 p-4">
+                <div className="flex items-center gap-3">
                 <FileText className="h-5 w-5 text-muted" />
                 <div>
                   <p className="font-medium">{d.name}</p>
                   <p className="text-xs text-muted capitalize">{d.category} · {formatDate(d.createdAt)}</p>
                 </div>
+                </div>
+                <DocumentDeleteButton documentId={d.id} canManage={perms.manageDocuments} />
               </CardContent>
             </Card>
           ))}

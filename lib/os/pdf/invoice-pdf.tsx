@@ -36,6 +36,14 @@ export type InvoicePdfData = {
   status: string;
   issueDate: string;
   dueDate: string;
+  org?: {
+    companyName: string;
+    address?: string | null;
+    city?: string | null;
+    gst?: string | null;
+    email?: string | null;
+    phone?: string | null;
+  };
   client: {
     companyName: string;
     contactPerson: string;
@@ -71,9 +79,12 @@ export function InvoicePdfDocument({ data }: { data: InvoicePdfData }) {
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.brand}>Rkyves</Text>
+            <Text style={styles.brand}>{data.org?.companyName || "Rkyves"}</Text>
             <Text style={styles.brandSub}>Technology built around your business</Text>
-            <Text style={{ ...styles.brandSub, marginTop: 8 }}>rkyves.com · sales@rkyves.com</Text>
+            <Text style={{ ...styles.brandSub, marginTop: 8 }}>
+              {[data.org?.email, data.org?.phone].filter(Boolean).join(" · ") || "rkyves.com · sales@rkyves.com"}
+            </Text>
+            {data.org?.gst && <Text style={styles.brandSub}>GST: {data.org.gst}</Text>}
           </View>
           <View style={{ alignItems: "flex-end" }}>
             <Text style={styles.invoiceTitle}>INVOICE</Text>

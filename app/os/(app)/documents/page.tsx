@@ -4,6 +4,9 @@ import { isDbConfigured, getDb, schema } from "@/lib/db";
 import { OsModuleShell, OsTable } from "@/components/os/OsModuleShell";
 import { SetupRequired } from "@/components/os/SetupRequired";
 import { DocumentUploadForm } from "@/components/os/DocumentUploadForm";
+import { DocumentDeleteButton } from "@/components/os/DocumentDeleteButton";
+import { getSessionUser } from "@/lib/os/auth/session";
+import { hasPermission } from "@/lib/os/auth/rbac";
 import { formatDate } from "@/lib/utils";
 
 export const metadata = { title: "Documents — Rkyves OS" };
@@ -19,6 +22,8 @@ export default async function DocumentsPage() {
     .orderBy(schema.documents.createdAt);
 
   const clients = await db.select({ id: schema.clients.id, name: schema.clients.companyName }).from(schema.clients);
+  const user = await getSessionUser();
+  const canManage = user ? hasPermission(user.role, "documents.manage") : false;
 
   return (
     <OsModuleShell title="Documents" description="Upload and manage client documents" dbConfigured isEmpty={false} emptyTitle="">
@@ -39,6 +44,7 @@ export default async function DocumentsPage() {
                 Download
               </Link>
             ) : "—",
+            <DocumentDeleteButton key="del" documentId={doc.id} canManage={canManage} />,
           ])}
         />
       )}
