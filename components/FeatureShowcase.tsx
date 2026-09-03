@@ -6,14 +6,14 @@ import Reveal from "@/components/motion/Reveal";
 import { easeOutExpo } from "@/lib/motion";
 
 const chartData = [
-  { height: 35, period: "Jan" },
-  { height: 55, period: "Feb" },
-  { height: 40, period: "Mar" },
-  { height: 70, period: "Apr" },
-  { height: 50, period: "May" },
-  { height: 85, period: "Jun", label: "412 Sales", highlight: true },
-  { height: 60, period: "Jul" },
-  { height: 45, period: "Aug" },
+  { height: 38, period: "Jan", sales: 168 },
+  { height: 52, period: "Feb", sales: 241 },
+  { height: 44, period: "Mar", sales: 198 },
+  { height: 68, period: "Apr", sales: 312 },
+  { height: 58, period: "May", sales: 276 },
+  { height: 88, period: "Jun", sales: 412, label: "412 Sales", highlight: true },
+  { height: 72, period: "Jul", sales: 348 },
+  { height: 64, period: "Aug", sales: 301 },
 ];
 
 export default function FeatureShowcase() {
@@ -35,6 +35,20 @@ export default function FeatureShowcase() {
               to make data-driven decisions and grow your business with
               confidence.
             </p>
+            <dl className="mt-8 grid grid-cols-3 gap-4 border-t border-white/5 pt-6">
+              <div>
+                <dt className="text-xs text-muted">Avg order</dt>
+                <dd className="mt-1 text-lg font-semibold text-foreground">₹1,840</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted">Conversion</dt>
+                <dd className="mt-1 text-lg font-semibold text-foreground">3.8%</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted">Growth</dt>
+                <dd className="mt-1 text-lg font-semibold text-emerald-400">+24%</dd>
+              </div>
+            </dl>
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -43,10 +57,11 @@ export default function FeatureShowcase() {
                 <div>
                   <p className="text-sm text-muted">Sales Over Time</p>
                   <p className="mt-1 text-xs text-muted-light">
-                    Orders this quarter — sample retail outlet
+                    Orders this year — sample retail outlet
                   </p>
                 </div>
-                <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] text-muted-light md:text-xs">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] text-emerald-300 md:text-xs">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
                   Live sync
                 </span>
               </div>
@@ -57,29 +72,40 @@ export default function FeatureShowcase() {
                     className="relative flex flex-1 flex-col items-center justify-end"
                   >
                     {bar.highlight && bar.label && (
-                      <span className="absolute -top-8 whitespace-nowrap rounded-full border border-white/10 bg-[#1a1a1a] px-2.5 py-1 text-[10px] text-foreground md:text-xs">
+                      <motion.span
+                        className="absolute -top-9 whitespace-nowrap rounded-full border border-white/15 bg-[#1a1a1a] px-2.5 py-1 text-[10px] text-foreground shadow-lg md:text-xs"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{
+                          opacity: inView || reduceMotion ? 1 : 0,
+                          y: inView || reduceMotion ? 0 : 6,
+                        }}
+                        transition={{ delay: reduceMotion ? 0 : 0.45, duration: 0.35 }}
+                      >
                         {bar.label}
-                      </span>
+                      </motion.span>
                     )}
                     <motion.div
-                      className={`w-full max-w-[28px] rounded-t-md ${
-                        bar.highlight ? "gradient-bar" : "bg-white/30"
+                      className={`w-full max-w-[32px] rounded-t-md ${
+                        bar.highlight
+                          ? "gradient-bar shadow-[0_0_18px_rgba(168,85,247,0.45)]"
+                          : "bg-gradient-to-t from-white/15 to-white/45"
                       }`}
+                      title={`${bar.sales} sales`}
                       initial={{
                         height: reduceMotion
                           ? `${bar.height}%`
-                          : `${Math.max(12, bar.height * 0.2)}%`,
+                          : `${Math.max(16, bar.height * 0.25)}%`,
                       }}
                       animate={{
                         height:
                           inView || reduceMotion
                             ? `${bar.height}%`
-                            : `${Math.max(12, bar.height * 0.2)}%`,
+                            : `${Math.max(16, bar.height * 0.25)}%`,
                       }}
                       transition={{
-                        duration: 0.6,
+                        duration: 0.65,
                         ease: easeOutExpo,
-                        delay: reduceMotion ? 0 : i * 0.06,
+                        delay: reduceMotion ? 0 : i * 0.05,
                       }}
                     />
                   </div>

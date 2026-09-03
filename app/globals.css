@@ -268,16 +268,3 @@ html {
   width: 100%;
 }
 
-.whatsapp-pulse {
-  position: relative;
-}
-
-.whatsapp-pulse::before {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: 9999px;
-  border: 2px solid rgba(37, 211, 102, 0.4);
-  animation: var(--animate-glow-pulse);
-  pointer-events: none;
-}
