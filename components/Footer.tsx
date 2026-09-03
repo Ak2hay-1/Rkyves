@@ -1,27 +1,27 @@
 import Link from "next/link";
 import RkyvesLogo from "@/components/RkyvesLogo";
-import { siteConfig } from "@/lib/constants";
+import { getWhatsAppUrl, siteConfig } from "@/lib/constants";
 
 const footerLinks = {
   Company: [
-    { label: "About", href: "/about" },
-    { label: "Services", href: "/services" },
-    { label: "Contact", href: "/contact" },
+    { label: "About", href: "/about", external: false },
+    { label: "Services", href: "/services", external: false },
+    { label: "Contact", href: "/contact", external: false },
   ],
   Product: [
-    { label: "Cullinos Restaurant OS", href: "/cullinos" },
-    { label: "Websites & Stores", href: "/services" },
-    { label: "Admin Panel", href: "/services" },
-    { label: "Hosting", href: "/services" },
+    { label: "Cullinos Restaurant OS", href: "/cullinos", external: false },
+    { label: "Websites & Stores", href: "/services", external: false },
+    { label: "Admin Panel", href: "/services", external: false },
+    { label: "Hosting", href: "/services", external: false },
   ],
   Resources: [
-    { label: "Case Studies", href: "/#clients" },
-    { label: "Why Rkyves", href: "/about" },
+    { label: "Case Studies", href: "/#clients", external: false },
+    { label: "Why Rkyves", href: "/about", external: false },
   ],
   Services: [
-    { label: "Book a Demo", href: "/contact" },
-    { label: "Contact", href: "/contact" },
-    { label: "WhatsApp", href: "/contact" },
+    { label: "Book a Demo", href: "/contact", external: false },
+    { label: "Contact", href: "/contact", external: false },
+    { label: "WhatsApp", href: getWhatsAppUrl(), external: true },
   ],
 };
 
@@ -40,12 +40,23 @@ export default function Footer() {
               <ul className="mt-4 space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="footer-link text-sm text-foreground/80 transition-colors hover:text-foreground"
-                    >
-                      {link.label}
-                    </Link>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="footer-link text-sm text-foreground/80 transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="footer-link text-sm text-foreground/80 transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

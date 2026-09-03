@@ -1,55 +1,49 @@
+import Image from "next/image";
 import Reveal from "@/components/motion/Reveal";
 import { Stagger, StaggerItem } from "@/components/motion/Stagger";
 
 const featured = {
   quote:
-    "Rkyves transformed our entire digital operation. From website to ERP, everything just works — and we finally stopped worrying about downtime.",
-  name: "David Miller",
-  role: "CEO, SmallBizCo",
+    "Rkyves transformed our entire digital operation. From website to ERP and POS, everything just works — and we finally stopped worrying about downtime.",
+  name: "Jerzy Thomas",
+  role: "Founder, Jerzyfy — Kochi",
+  image: "/testimonials/jerzy-thomas.jpg",
   stats: [
-    { value: "10k", label: "New customers" },
-    { value: "20%", label: "Market share" },
+    { value: "3×", label: "Faster order flow" },
+    { value: "99.9%", label: "Uptime since launch" },
   ],
 };
 
 const testimonials = [
   {
     quote:
-      "The admin panel alone saved us hours every week. We manage products, orders, and inventory without calling a developer.",
-    name: "Michael Johnson",
-    role: "VP of Marketing, RetailCo",
-    initials: "MJ",
+      "Recipe tracking and inventory used to be spreadsheets and guesswork. Now our production team sees exact levels in real time — enterprise software that fits how we actually work.",
+    name: "Dr. Ananya Rao",
+    role: "Director, Yathartha Foods — Bengaluru",
+    image: "/testimonials/yathartha-founder.jpg",
   },
   {
     quote:
-      "Our e-commerce store went live in weeks, not months. The infrastructure support means we sleep better at night.",
-    name: "Sarah Chen",
-    role: "Founder, TechStart",
-    initials: "SC",
+      "Cullinos tied our POS, kitchen display, and QR ordering together. Service is smoother on busy weekends, and GST billing stopped being a nightly headache.",
+    name: "Arjun Nair",
+    role: "Owner, SpiceRoute Kitchen — Thrissur",
+    image: "/testimonials/arjun-nair.jpg",
   },
   {
     quote:
-      "From POS integration to hosting, Rkyves handles everything underneath. We focus on customers, they handle the tech.",
-    name: "Raj Patel",
-    role: "Owner, FoodHub",
-    initials: "RP",
+      "Our online catalogue and storefront finally match what customers see in the shop. Rkyves handled hosting and security so we can focus on sales, not servers.",
+    name: "Ramesh Sharma",
+    role: "Proprietor, Sharma Electronics — Jaipur",
+    image: "/testimonials/ramesh-sharma.jpg",
   },
   {
     quote:
-      "Security, backups, monitoring — things we never thought about until Rkyves showed us what we were missing.",
-    name: "Emily Watson",
-    role: "Director, MediCare+",
-    initials: "EW",
+      "From the first website to WhatsApp enquiries landing in one place, everything feels built for a small Indian business — not a generic foreign template.",
+    name: "Meera Desai",
+    role: "Founder, Lotus Leaf Cafe — Mumbai",
+    image: "/testimonials/meera-desai.jpg",
   },
 ];
-
-function Avatar({ initials }: { initials: string }) {
-  return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-xs font-semibold text-white">
-      {initials}
-    </div>
-  );
-}
 
 export default function Testimonials() {
   return (
@@ -57,11 +51,16 @@ export default function Testimonials() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal>
           <div className="bento-card grid gap-8 p-6 md:grid-cols-2 md:gap-10 md:p-10">
-            <div
-              className="min-h-[320px] rounded-2xl bg-gradient-to-br from-amber-600/50 via-yellow-700/30 to-amber-900/40 md:min-h-[400px]"
-              role="img"
-              aria-label={`${featured.name} portrait`}
-            />
+            <div className="relative min-h-[320px] overflow-hidden rounded-2xl md:min-h-[400px]">
+              <Image
+                src={featured.image}
+                alt={`${featured.name}, ${featured.role}`}
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+            </div>
             <div className="flex flex-col justify-center">
               <p className="text-base leading-relaxed text-muted-light md:text-lg">
                 &ldquo;{featured.quote}&rdquo;
@@ -92,7 +91,15 @@ export default function Testimonials() {
                   &ldquo;{t.quote}&rdquo;
                 </p>
                 <div className="mt-6 flex items-center gap-3">
-                  <Avatar initials={t.initials} />
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-1 ring-white/10">
+                    <Image
+                      src={t.image}
+                      alt={t.name}
+                      fill
+                      className="object-cover object-top"
+                      sizes="40px"
+                    />
+                  </div>
                   <div>
                     <p className="text-sm font-semibold text-foreground">
                       {t.name}

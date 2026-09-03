@@ -32,4 +32,15 @@ export const clientCaseStudies: ClientCaseStudy[] = [
     tags: ["Recipe Management", "Inventory", "Custom Software", "Enterprise Web"],
     accent: "from-emerald-600/20 to-primary/10",
   },
+  {
+    id: "cullinos",
+    name: "Cullinos",
+    url: "https://cullinos.com",
+    industry: "Restaurant OS",
+    headline: "POS, kitchen, and inventory in one platform",
+    description:
+      "All-in-one restaurant operating system — POS, kitchen display, waiter app, guest ordering, inventory, and GST billing from a single cloud backend.",
+    tags: ["POS", "Kitchen Display", "QR Ordering", "GST Billing"],
+    accent: "from-amber-500/20 to-primary/10",
+  },
 ];

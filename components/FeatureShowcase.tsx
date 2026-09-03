@@ -6,14 +6,14 @@ import Reveal from "@/components/motion/Reveal";
 import { easeOutExpo } from "@/lib/motion";
 
 const chartData = [
-  { height: 35, label: "" },
-  { height: 55, label: "" },
-  { height: 40, label: "" },
-  { height: 70, label: "" },
-  { height: 50, label: "" },
-  { height: 85, label: "412 Sales", highlight: true },
-  { height: 60, label: "" },
-  { height: 45, label: "" },
+  { height: 35, period: "Jan" },
+  { height: 55, period: "Feb" },
+  { height: 40, period: "Mar" },
+  { height: 70, period: "Apr" },
+  { height: 50, period: "May" },
+  { height: 85, period: "Jun", label: "412 Sales", highlight: true },
+  { height: 60, period: "Jul" },
+  { height: 45, period: "Aug" },
 ];
 
 export default function FeatureShowcase() {
@@ -39,11 +39,21 @@ export default function FeatureShowcase() {
 
           <Reveal delay={0.1}>
             <div ref={chartRef} className="bento-card chart-glow p-6 md:p-8">
-              <p className="text-sm text-muted">Sales Over Time</p>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm text-muted">Sales Over Time</p>
+                  <p className="mt-1 text-xs text-muted-light">
+                    Orders this quarter — sample retail outlet
+                  </p>
+                </div>
+                <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] text-muted-light md:text-xs">
+                  Live sync
+                </span>
+              </div>
               <div className="mt-8 flex h-48 items-end justify-between gap-2 md:h-56 md:gap-3">
                 {chartData.map((bar, i) => (
                   <div
-                    key={i}
+                    key={bar.period}
                     className="relative flex flex-1 flex-col items-center justify-end"
                   >
                     {bar.highlight && bar.label && (
@@ -53,11 +63,18 @@ export default function FeatureShowcase() {
                     )}
                     <motion.div
                       className={`w-full max-w-[28px] rounded-t-md ${
-                        bar.highlight ? "gradient-bar" : "bg-white/10"
+                        bar.highlight ? "gradient-bar" : "bg-white/30"
                       }`}
-                      initial={{ height: reduceMotion ? `${bar.height}%` : "0%" }}
+                      initial={{
+                        height: reduceMotion
+                          ? `${bar.height}%`
+                          : `${Math.max(12, bar.height * 0.2)}%`,
+                      }}
                       animate={{
-                        height: inView || reduceMotion ? `${bar.height}%` : "0%",
+                        height:
+                          inView || reduceMotion
+                            ? `${bar.height}%`
+                            : `${Math.max(12, bar.height * 0.2)}%`,
                       }}
                       transition={{
                         duration: 0.6,
@@ -69,12 +86,11 @@ export default function FeatureShowcase() {
                 ))}
               </div>
               <div className="mt-3 flex justify-between text-[10px] text-muted md:text-xs">
-                <span>0</span>
-                <span>100</span>
-                <span>200</span>
-                <span>300</span>
-                <span>400</span>
-                <span>500</span>
+                {chartData.map((bar) => (
+                  <span key={bar.period} className="flex-1 text-center">
+                    {bar.period}
+                  </span>
+                ))}
               </div>
             </div>
           </Reveal>
