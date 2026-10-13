@@ -6,6 +6,7 @@ import { contactInfo, siteConfig } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: `How ${siteConfig.name} collects, uses, and protects your information.`,
+  alternates: { canonical: "/privacy" },
 };
 
 const lastUpdated = "August 24, 2026";

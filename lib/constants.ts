@@ -16,7 +16,7 @@ export const siteConfig = {
   tagline: "Technology built around your business.",
   description:
     "Rkyves is a technology and digital solutions company that helps businesses build, manage, and grow their digital presence.",
-  url: "https://rkyves.com",
+  url: "https://www.rkyves.com",
   pronunciation: "archives",
 };
 
@@ -77,9 +77,9 @@ export const infraLayers: InfraLayer[] = [
 ];
 
 export const contactInfo = {
-  email: "sales@rkyves.com",
-  phone: "+91 74992 49403",
-  whatsapp: "+917499249403",
+  email: "hello@rkyves.com",
+  phone: "+91 76660 71619",
+  whatsapp: "+917666071619",
   whatsappMessage: "Hello Rkyves, I would like to discuss a project.",
   address: "India",
 };
@@ -239,10 +239,13 @@ export const cullinosProduct = {
     "Offline gateway for unreliable connectivity",
     "Multi-outlet management for chains",
   ],
+  pricingUrl: "https://cullinos.com/pricing",
+  // Keep in sync with MARKETING_PLANS in the cullinos repo (packages/shared/src/marketing.ts).
   plans: [
-    { name: "Starter", price: "₹2,999/mo", outlets: 1, terminals: 2 },
-    { name: "Professional", price: "₹7,999/mo", outlets: 3, terminals: 6 },
-    { name: "Enterprise", price: "Custom", outlets: "Unlimited", terminals: "Per contract" },
+    { name: "Starter", price: "₹1,499/mo", outlets: 1, terminals: 2 },
+    { name: "QSR / Food SMB", price: "₹2,499/mo", outlets: 1, terminals: 3 },
+    { name: "Professional", price: "₹4,999/mo", outlets: 3, terminals: 10 },
+    { name: "Enterprise", price: "Custom", outlets: "Up to 50", terminals: "Per contract" },
   ],
 };
 

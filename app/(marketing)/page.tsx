@@ -22,6 +22,7 @@ import {
 export const metadata: Metadata = {
   title: siteConfig.tagline,
   description: siteConfig.description,
+  alternates: { canonical: "/" },
   openGraph: {
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,

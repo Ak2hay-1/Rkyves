@@ -93,6 +93,8 @@ export default function ContactForm() {
             onChange={handleChange}
             className={inputClass}
             placeholder="Your name"
+            required
+            aria-required="true"
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? "name-error" : undefined}
           />
@@ -115,6 +117,8 @@ export default function ContactForm() {
             onChange={handleChange}
             className={inputClass}
             placeholder="you@company.com"
+            required
+            aria-required="true"
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? "email-error" : undefined}
           />
@@ -177,6 +181,8 @@ export default function ContactForm() {
           onChange={handleChange}
           className={inputClass}
           placeholder="Tell us about your business and what you need..."
+          required
+          aria-required="true"
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "message-error" : undefined}
         />

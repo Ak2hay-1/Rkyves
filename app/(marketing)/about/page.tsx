@@ -10,6 +10,7 @@ import {
 
 export const metadata: Metadata = {
   title: "About",
+  alternates: { canonical: "/about" },
   description:
     "Learn about Rkyves — a technology company building accessible digital solutions for growing businesses.",
 };

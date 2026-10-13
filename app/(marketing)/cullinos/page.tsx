@@ -6,6 +6,7 @@ import { Stagger, StaggerItem } from "@/components/motion/Stagger";
 export const metadata = {
   title: "Cullinos — Restaurant Operating System by Rkyves",
   description: cullinosProduct.description,
+  alternates: { canonical: "/cullinos" },
 };
 
 export default function CullinosPage() {
@@ -88,6 +89,17 @@ export default function CullinosPage() {
                 </StaggerItem>
               ))}
             </Stagger>
+            <p className="mt-4 text-sm text-muted">
+              Prices per outlet per month.{" "}
+              <a
+                href={cullinosProduct.pricingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary underline"
+              >
+                Full plan details on cullinos.com
+              </a>
+            </p>
           </Reveal>
         </div>
 

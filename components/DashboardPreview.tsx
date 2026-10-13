@@ -1,14 +1,5 @@
 import RkyvesLogo from "@/components/RkyvesLogo";
 
-function formatToday() {
-  return new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
 export default function DashboardPreview() {
   return (
     <div className="bg-[#0d0d0d] p-6 md:p-8">
@@ -16,7 +7,7 @@ export default function DashboardPreview() {
         <RkyvesLogo size="sm" href={undefined} />
         <span className="text-sm text-muted">Dashboard</span>
       </div>
-      <p className="mt-4 text-xs text-muted">Today, {formatToday()}</p>
+      <p className="mt-4 text-xs text-muted">Today</p>
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         {[
           { label: "Revenue", value: "₹2.4L" },

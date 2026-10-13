@@ -6,6 +6,7 @@ import { contactInfo, siteConfig } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Terms & Conditions",
   description: `Terms governing use of the ${siteConfig.name} website and related services.`,
+  alternates: { canonical: "/terms" },
 };
 
 const lastUpdated = "August 24, 2026";

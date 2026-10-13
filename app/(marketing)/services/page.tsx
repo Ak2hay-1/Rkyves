@@ -4,6 +4,7 @@ import { services } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Services",
+  alternates: { canonical: "/services" },
   description:
     "Professional websites, e-commerce, admin panels, business integrations, ERP/POS software, and hosting — all from Rkyves.",
 };

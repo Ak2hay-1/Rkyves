@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Get in touch with Rkyves. Send us a message, email us, or chat on WhatsApp to discuss your project.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

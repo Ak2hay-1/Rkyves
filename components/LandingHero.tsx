@@ -28,7 +28,7 @@ export default function LandingHero() {
             <h1 className="mt-8 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
               <span className="text-foreground">{headlineFirst}.</span>
               <br />
-              <span className="text-muted-light">{headlineSecond}.</span>
+              <span className="text-muted-light">{headlineSecond}</span>
             </h1>
           </StaggerItem>
 
