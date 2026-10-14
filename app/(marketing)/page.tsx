@@ -13,6 +13,7 @@ import ServiceCard from "@/components/ServiceCard";
 import Reveal from "@/components/motion/Reveal";
 import {
   approachItems,
+  cullinosProduct,
   services,
   siteConfig,
   surfaceVsDepth,
@@ -61,6 +62,18 @@ export default function HomePage() {
               </Reveal>
             ))}
           </div>
+          <p className="mt-8 text-center text-sm text-muted">
+            Running a restaurant? Try{" "}
+            <a
+              href={cullinosProduct.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+            >
+              Cullinos, by Rkyves
+            </a>
+            .
+          </p>
         </div>
       </section>
 

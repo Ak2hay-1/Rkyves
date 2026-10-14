@@ -53,9 +53,9 @@ function ActivityChart() {
           fill="none"
           stroke="url(#lineGrad)"
           strokeWidth="2"
-          initial={{ pathLength: reduceMotion ? 1 : 0 }}
+          initial={{ pathLength: 0 }}
           animate={{ pathLength: inView || reduceMotion ? 1 : 0 }}
-          transition={{ duration: 1.2, ease: easeOutExpo }}
+          transition={{ duration: reduceMotion ? 0 : 1.2, ease: easeOutExpo }}
         />
         <circle cx="300" cy="55" r="4" fill="white" />
       </svg>
@@ -120,12 +120,12 @@ function TrafficSources() {
           <div className="h-2 overflow-hidden rounded-full bg-white/10">
             <motion.div
               className={`h-full rounded-full ${channel.color}`}
-              initial={{ width: reduceMotion ? `${channel.value}%` : "0%" }}
+              initial={{ width: "0%" }}
               animate={{
                 width: inView || reduceMotion ? `${channel.value}%` : "0%",
               }}
               transition={{
-                duration: 0.7,
+                duration: reduceMotion ? 0 : 0.7,
                 ease: easeOutExpo,
                 delay: reduceMotion ? 0 : i * 0.08,
               }}
@@ -160,11 +160,7 @@ function RetentionPanel() {
           <div key={point.week} className="flex flex-1 flex-col items-center gap-2">
             <motion.div
               className="w-full max-w-[36px] rounded-t-md bg-gradient-to-t from-primary/40 to-primary"
-              initial={{
-                height: reduceMotion
-                  ? `${(point.value / max) * 100}%`
-                  : "18%",
-              }}
+              initial={{ height: "18%" }}
               animate={{
                 height:
                   inView || reduceMotion
@@ -172,7 +168,7 @@ function RetentionPanel() {
                     : "18%",
               }}
               transition={{
-                duration: 0.55,
+                duration: reduceMotion ? 0 : 0.55,
                 ease: easeOutExpo,
                 delay: reduceMotion ? 0 : i * 0.07,
               }}

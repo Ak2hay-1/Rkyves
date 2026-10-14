@@ -5,6 +5,7 @@ import ContactForm from "@/components/ContactForm";
 import {
   contactInfo,
   getMailtoUrl,
+  getTelUrl,
   getWhatsAppUrl,
 } from "@/lib/constants";
 
@@ -49,7 +50,7 @@ export default function ContactPage() {
                   </span>
                   <div>
                     <p className="font-medium text-foreground">WhatsApp</p>
-                    <p className="text-sm text-muted">{contactInfo.whatsapp}</p>
+                    <p className="text-sm text-muted">{contactInfo.phone}</p>
                   </div>
                 </a>
 
@@ -66,7 +67,10 @@ export default function ContactPage() {
                   </div>
                 </a>
 
-                <div className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4">
+                <a
+                  href={getTelUrl()}
+                  className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-primary/40 hover:bg-primary/5"
+                >
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <Phone className="h-5 w-5" aria-hidden="true" />
                   </span>
@@ -74,7 +78,7 @@ export default function ContactPage() {
                     <p className="font-medium text-foreground">Phone</p>
                     <p className="text-sm text-muted">{contactInfo.phone}</p>
                   </div>
-                </div>
+                </a>
               </div>
             </div>
 

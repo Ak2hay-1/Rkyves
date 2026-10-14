@@ -92,9 +92,7 @@ export default function FeatureShowcase() {
                       }`}
                       title={`${bar.sales} sales`}
                       initial={{
-                        height: reduceMotion
-                          ? `${bar.height}%`
-                          : `${Math.max(16, bar.height * 0.25)}%`,
+                        height: `${Math.max(16, bar.height * 0.25)}%`,
                       }}
                       animate={{
                         height:
@@ -103,7 +101,7 @@ export default function FeatureShowcase() {
                             : `${Math.max(16, bar.height * 0.25)}%`,
                       }}
                       transition={{
-                        duration: 0.65,
+                        duration: reduceMotion ? 0 : 0.65,
                         ease: easeOutExpo,
                         delay: reduceMotion ? 0 : i * 0.05,
                       }}

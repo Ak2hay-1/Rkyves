@@ -242,10 +242,10 @@ export const cullinosProduct = {
   pricingUrl: "https://cullinos.com/pricing",
   // Keep in sync with MARKETING_PLANS in the cullinos repo (packages/shared/src/marketing.ts).
   plans: [
-    { name: "Starter", price: "₹1,499/mo", outlets: 1, terminals: 2 },
-    { name: "QSR / Food SMB", price: "₹2,499/mo", outlets: 1, terminals: 3 },
-    { name: "Professional", price: "₹4,999/mo", outlets: 3, terminals: 10 },
-    { name: "Enterprise", price: "Custom", outlets: "Up to 50", terminals: "Per contract" },
+    { name: "Starter", price: "₹1,499/mo", limits: "1 outlet · 2 terminals" },
+    { name: "QSR / Food SMB", price: "₹2,499/mo", limits: "1 outlet · 3 terminals" },
+    { name: "Professional", price: "₹4,999/mo", limits: "3 outlets · 10 terminals" },
+    { name: "Enterprise", price: "Custom", limits: "Up to 50 outlets · terminals per contract" },
   ],
 };
 
@@ -264,6 +264,10 @@ export function getWhatsAppUrl(message?: string) {
   const phone = contactInfo.whatsapp.replace(/\D/g, "");
   const text = encodeURIComponent(message ?? contactInfo.whatsappMessage);
   return `https://wa.me/${phone}?text=${text}`;
+}
+
+export function getTelUrl() {
+  return `tel:${contactInfo.phone.replace(/[^\d+]/g, "")}`;
 }
 
 export function getMailtoUrl(subject = "Inquiry from Rkyves Website") {

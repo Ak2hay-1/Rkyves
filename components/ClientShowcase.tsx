@@ -7,7 +7,7 @@ import { Stagger, StaggerItem } from "@/components/motion/Stagger";
 
 export default function ClientShowcase() {
   return (
-    <section id="clients" className="border-y border-border bg-surface py-16 md:py-24">
+    <section id="clients" className="scroll-mt-28 border-y border-border bg-surface py-16 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
           <SectionHeading

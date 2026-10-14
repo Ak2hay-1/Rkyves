@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { Globe, ShoppingBag, LayoutDashboard } from "lucide-react";
 import { infraLayers, surfaceVsDepth } from "@/lib/constants";
 import { easeOutExpo } from "@/lib/motion";
@@ -11,7 +11,6 @@ type View = "client" | "infra";
 
 export default function SurfaceVsDepth() {
   const [view, setView] = useState<View>("client");
-  const reduceMotion = useReducedMotion();
 
   return (
     <section className="py-16 md:py-24">
@@ -57,9 +56,9 @@ export default function SurfaceVsDepth() {
             {view === "client" ? (
               <motion.div
                 key="client"
-                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={reduceMotion ? undefined : { opacity: 0, y: -16 }}
+                exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.4, ease: easeOutExpo }}
                 className="bento-card overflow-hidden p-8 md:p-12"
               >
@@ -97,9 +96,9 @@ export default function SurfaceVsDepth() {
             ) : (
               <motion.div
                 key="infra"
-                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={reduceMotion ? undefined : { opacity: 0, y: -16 }}
+                exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.4, ease: easeOutExpo }}
                 className="bento-card p-8 md:p-12"
               >
@@ -109,12 +108,12 @@ export default function SurfaceVsDepth() {
                     return (
                       <motion.div
                         key={layer.label}
-                        initial={reduceMotion ? false : { opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{
                           duration: 0.4,
                           ease: easeOutExpo,
-                          delay: reduceMotion ? 0 : index * 0.08,
+                          delay: index * 0.08,
                         }}
                         className="flex items-start gap-4 rounded-xl border border-white/5 bg-white/[0.02] p-4"
                       >

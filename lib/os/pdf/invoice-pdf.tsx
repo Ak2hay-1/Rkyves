@@ -82,7 +82,7 @@ export function InvoicePdfDocument({ data }: { data: InvoicePdfData }) {
             <Text style={styles.brand}>{data.org?.companyName || "Rkyves"}</Text>
             <Text style={styles.brandSub}>Technology built around your business</Text>
             <Text style={{ ...styles.brandSub, marginTop: 8 }}>
-              {[data.org?.email, data.org?.phone].filter(Boolean).join(" · ") || "rkyves.com · sales@rkyves.com"}
+              {[data.org?.email, data.org?.phone].filter(Boolean).join(" · ") || "rkyves.com · hello@rkyves.com"}
             </Text>
             {data.org?.gst && <Text style={styles.brandSub}>GST: {data.org.gst}</Text>}
           </View>

@@ -1,29 +1,36 @@
 "use client";
 
-import { motion, useReducedMotion, type HTMLMotionProps } from "motion/react";
+import { motion, type HTMLMotionProps } from "motion/react";
 import { easeOutExpo, staggerTransition } from "@/lib/motion";
 
 type StaggerProps = HTMLMotionProps<"div"> & {
   onMount?: boolean;
 };
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: staggerTransition,
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: easeOutExpo },
+  },
+};
+
 export function Stagger({ children, className, onMount = false, ...props }: StaggerProps) {
-  const reduceMotion = useReducedMotion();
-
-  const variants = {
-    hidden: {},
-    visible: {
-      transition: staggerTransition,
-    },
-  };
-
   if (onMount) {
     return (
       <motion.div
         className={className}
-        initial={reduceMotion ? false : "hidden"}
-        animate={reduceMotion ? undefined : "visible"}
-        variants={variants}
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
         {...props}
       >
         {children}
@@ -34,10 +41,10 @@ export function Stagger({ children, className, onMount = false, ...props }: Stag
   return (
     <motion.div
       className={className}
-      initial={reduceMotion ? false : "hidden"}
-      whileInView={reduceMotion ? undefined : "visible"}
+      initial="hidden"
+      whileInView="visible"
       viewport={{ once: true, margin: "-80px" }}
-      variants={variants}
+      variants={containerVariants}
       {...props}
     >
       {children}
@@ -48,25 +55,8 @@ export function Stagger({ children, className, onMount = false, ...props }: Stag
 type StaggerItemProps = HTMLMotionProps<"div">;
 
 export function StaggerItem({ children, className, ...props }: StaggerItemProps) {
-  const reduceMotion = useReducedMotion();
-
   return (
-    <motion.div
-      className={className}
-      variants={
-        reduceMotion
-          ? undefined
-          : {
-              hidden: { opacity: 0, y: 24 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.6, ease: easeOutExpo },
-              },
-            }
-      }
-      {...props}
-    >
+    <motion.div className={className} variants={itemVariants} {...props}>
       {children}
     </motion.div>
   );

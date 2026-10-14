@@ -40,14 +40,6 @@ const testimonials = [
     brand: "SE",
     brandAccent: "from-sky-500 to-indigo-400",
   },
-  {
-    quote:
-      "From the first website to WhatsApp enquiries landing in one place, everything feels built for a small Indian business — not a generic foreign template.",
-    name: "Meera Desai",
-    role: "Founder, Lotus Leaf Cafe — Mumbai",
-    brand: "LL",
-    brandAccent: "from-rose-500 to-pink-400",
-  },
 ];
 
 function BrandMark({
@@ -123,7 +115,7 @@ export default function Testimonials() {
           </div>
         </Reveal>
 
-        <Stagger className="mt-5 grid gap-4 md:grid-cols-2 md:gap-5">
+        <Stagger className="mt-5 grid gap-4 md:grid-cols-3 md:gap-5">
           {testimonials.map((t) => (
             <StaggerItem key={t.name}>
               <article className="bento-card h-full p-6 md:p-8">

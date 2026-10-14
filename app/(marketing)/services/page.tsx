@@ -29,7 +29,7 @@ export default function ServicesPage() {
                 <article
                   key={service.id}
                   id={service.id}
-                  className={`grid gap-8 lg:grid-cols-2 lg:items-center ${
+                  className={`scroll-mt-28 grid gap-8 lg:grid-cols-2 lg:items-center ${
                     !isEven ? "lg:[&>div:first-child]:order-2" : ""
                   }`}
                 >

@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { cullinosProduct, getWhatsAppUrl } from "@/lib/constants";
+import {
+  contactInfo,
+  cullinosProduct,
+  getMailtoUrl,
+  getTelUrl,
+  getWhatsAppUrl,
+} from "@/lib/constants";
 import Reveal from "@/components/motion/Reveal";
 import { Stagger, StaggerItem } from "@/components/motion/Stagger";
 
@@ -55,6 +61,17 @@ export default function CullinosPage() {
                   WhatsApp
                 </a>
               </div>
+              <p className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+                <a href={getTelUrl()} className="hover:text-foreground">
+                  {contactInfo.phone}
+                </a>
+                <a
+                  href={getMailtoUrl("Cullinos enquiry")}
+                  className="hover:text-foreground"
+                >
+                  {contactInfo.email}
+                </a>
+              </p>
             </div>
           </div>
         </Reveal>
@@ -82,15 +99,13 @@ export default function CullinosPage() {
                         {plan.price}
                       </span>
                     </div>
-                    <p className="mt-2 text-sm text-muted">
-                      {plan.outlets} outlet(s) · {plan.terminals} terminal(s)
-                    </p>
+                    <p className="mt-2 text-sm text-muted">{plan.limits}</p>
                   </div>
                 </StaggerItem>
               ))}
             </Stagger>
             <p className="mt-4 text-sm text-muted">
-              Prices per outlet per month.{" "}
+              All prices per month, excl. GST.{" "}
               <a
                 href={cullinosProduct.pricingUrl}
                 target="_blank"
