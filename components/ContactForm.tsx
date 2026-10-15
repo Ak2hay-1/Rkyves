@@ -14,6 +14,14 @@ const initialForm: ContactFormData = {
   message: "",
 };
 
+const fieldOrder: (keyof ContactFormData)[] = [
+  "name",
+  "email",
+  "phone",
+  "serviceInterest",
+  "message",
+];
+
 export default function ContactForm() {
   const [form, setForm] = useState<ContactFormData>(initialForm);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -45,6 +53,10 @@ export default function ContactForm() {
         }
       }
       setErrors(fieldErrors);
+      const firstInvalid = fieldOrder.find((field) => fieldErrors[field]);
+      if (firstInvalid) {
+        document.getElementById(firstInvalid)?.focus();
+      }
       return;
     }
 
@@ -143,7 +155,14 @@ export default function ContactForm() {
             onChange={handleChange}
             className={inputClass}
             placeholder="+91 XXXXX XXXXX"
+            aria-invalid={!!errors.phone}
+            aria-describedby={errors.phone ? "phone-error" : undefined}
           />
+          {errors.phone && (
+            <p id="phone-error" className="mt-1 text-sm text-red-600">
+              {errors.phone}
+            </p>
+          )}
         </div>
 
         <div>
